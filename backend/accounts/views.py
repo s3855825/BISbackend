@@ -35,12 +35,18 @@ class UserView(APIView):
         # return the list of all users
         users = CustomUser.objects.all()
         serializer = UserSerializer(users, many=True)
+        if not serializer.data:
+            return Response({'EmptyUserList': 'No user registered'})
         return Response(serializer.data)
 
     def post(self, request, format=None):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            username = serializer.validated_data['username']
+            email = serializer.validated_data['email']
+            if CustomUser.objects.filter(username=username).exists() or CustomUser.objects.filter(email=email).exists():
+                raise HTTP401("This username or email is already in used.")
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
