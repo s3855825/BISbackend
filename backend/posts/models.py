@@ -7,5 +7,6 @@ class Post(models.Model):
 
     id = models.IntegerField(primary_key=True, auto_created=True)
     title = models.CharField(max_length=255)
-    message=models.CharField(max_length=255)
-    
+    message = models.CharField(max_length=255)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    author = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE)
