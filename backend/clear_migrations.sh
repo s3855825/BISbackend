@@ -1,4 +1,3 @@
-cd backend
 rm accounts/migrations/0*
 rm posts/migrations/0*
 rm groups/migrations/0*
