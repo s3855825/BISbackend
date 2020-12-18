@@ -6,7 +6,6 @@ class CustomUser(models.Model):
     class Meta:
         db_table = "User"
     
-    id = models.AutoField(primary_key=True, auto_created=True)
     username = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
