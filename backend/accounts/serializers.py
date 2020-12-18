@@ -22,7 +22,6 @@ class LoginSerializer(serializers.Serializer):
 
 
 class AccessTokenSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
     username = serializers.CharField()
     email = serializers.CharField()
     token = serializers.CharField()
