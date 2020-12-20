@@ -16,6 +16,9 @@ class HTTP401(AuthenticationFailed):
 
 class GroupView(APIView):
     def get(self, request, format=None):
+        """
+        show all groups
+        """
         groups = Group.objects.all()
         serializer = GroupSerializer(groups, many=True)
         if not serializer.data:
@@ -23,6 +26,9 @@ class GroupView(APIView):
         return serializer.data
 
     def post(self, request, format=None):
+        """
+        create new groups
+        """
         group_serializer = GroupSerializer(data=request.data)
         if group_serializer.is_valid(raise_exception=True):
             group_serializer.save()
@@ -32,6 +38,9 @@ class GroupView(APIView):
 
 class GroupDetailView(APIView):
     def get(self, request, primary_key, format=None):
+        """
+        show group details
+        """
         try:
             group = Group.objects.filter(pk=primary_key)
             serializer = GroupSerializer(group)
@@ -40,6 +49,9 @@ class GroupDetailView(APIView):
             raise HTTP401
 
     def put(self, request, primary_key, format=None):
+        """
+        modify group details
+        """
         try:
             group = Group.objects.get(pk=primary_key)
             serializer = GroupSerializer(group, data=request.data)
@@ -50,6 +62,9 @@ class GroupDetailView(APIView):
             raise Http404
 
     def delete(self, request, primary_key, format=None):
+        """
+        delete group
+        """
         try:
             group = Group.objects.get(pk=primary_key)
             group.delete()
@@ -58,23 +73,46 @@ class GroupDetailView(APIView):
             raise Http404
 
 
-class TaskView(APIView):
+class GroupMemberView(APIView):
     def get(self, request, primary_key, format=None):
         """
-        Get all tasks belonging to a group.
+        show all members in group
         """
-        if isinstance(request.user, AnonymousUser):
-            return Response(data={'Unauthorized': 'User must log in to view content'},
-                            status=status.HTTP_401_UNAUTHORIZED)
-        task = Task.objects.filter(author=request.user)
-        task_serializer = TaskSerializer(data=task, many=True)
-        if not task_serializer:
-            return Response(data={'EmptyTaskList': 'No task in this group yet :<'}, status=status.HTTP_200_OK)
-        return Response(data=task_serializer.data, status=status.HTTP_200_OK)
+        return
 
     def post(self, request, primary_key, format=None):
-        pass
+        """
+        add member to group
+        """
+        return
 
+    def delete(self, request, primary_key, format=None):
+        """
+        delete member from group
+        """
+        return
 
-class TaskDetailView(APIView):
-    pass
+class GroupTaskView(APIView):
+    def get(self, request, format=None):
+        """
+        show all tasks in group or a specific task
+        """
+        return
+
+    def post(self, request, primary_key, format=None):
+        """
+        add post to group
+        """
+        return
+
+    def put(self, request, primary_key, format=None):
+        """
+        edit task in group or add member to task
+        """
+        return
+
+    def delete(self, request, primary_key, format=None):
+        """
+        delete task in group
+        """
+        return
