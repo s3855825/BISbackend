@@ -1,8 +1,8 @@
-from django.http import Http404
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.exceptions import AuthenticationFailed
 import rest_framework.status as status
+from django.http import Http404
+from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .models import Post
 from .serializers import PostSerializer
@@ -11,6 +11,7 @@ from .serializers import PostSerializer
 class HTTP401(AuthenticationFailed):
     pass
 
+
 # Create your views here.
 class PostView(APIView):
     def get(self, request, format=None):
@@ -18,6 +19,7 @@ class PostView(APIView):
         serializer = PostSerializer(posts, many=True)
         if not serializer.data:
             return Response({'EmptyPostList': 'No post made!'})
+        return Response(serializer.data)
 
     def post(self, request, format=None):
         serializer = PostSerializer(data=request.data)
@@ -35,18 +37,18 @@ class PostDetailView(APIView):
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         except Post.DoesNotExist:
             raise Http404
-    
+
     def put(self, request, primary_key, format=None):
         try:
             post = Post.objects.get(pk=primary_key)
             serializer = PostSerializer(post, data=request.data)
-            if serializer.is_valid():
+            if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 return Response(data=serializer.data, status=status.HTTP_200_OK)
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Post.DoesNotExist:
             raise Http404
-    
+
     def delete(self, request, primary_key, format=None):
         try:
             post = Post.objects.get(pk=primary_key)

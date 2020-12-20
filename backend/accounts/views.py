@@ -1,18 +1,15 @@
 import binascii
 import os
 
-from django.contrib.auth import authenticate
 # from django.contrib.auth.models import User
 from django.http import Http404
 from rest_framework import status
-from rest_framework.authentication import TokenAuthentication
 from rest_framework.exceptions import AuthenticationFailed
-from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .serializers import LoginSerializer, UserSerializer, AccessTokenSerializer
 from .models import CustomUser, Token
+from .serializers import LoginSerializer, UserSerializer, AccessTokenSerializer
 
 
 def generate_token(user_id):
@@ -78,7 +75,6 @@ class UserDetailView(APIView):
             return Response(data=[], status=status.HTTP_200_OK)
         except CustomUser.DoesNotExist:
             raise Http404
-
 
 
 class UserAuthView(APIView):
