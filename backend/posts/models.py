@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from django.db import models
 
 
@@ -8,5 +10,5 @@ class Post(models.Model):
 
     title = models.CharField(max_length=255)
     message = models.CharField(max_length=255)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now_add=True, default=timezone.now)
     author = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE)

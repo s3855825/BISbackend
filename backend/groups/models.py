@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 
 # Create your models here.
@@ -23,7 +24,7 @@ class Task(models.Model):
 
     task_name = models.CharField()
     author = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE)
-    created_time = models.DateTimeField(auto_created=True)
+    created_time = models.DateTimeField(auto_created=True, default=timezone.now())
     deadline = models.DateTimeField(default=None)
 
 

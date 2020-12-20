@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 
 # from django.contrib.auth.models import User
@@ -19,4 +20,4 @@ class Token(models.Model):
 
     key = models.CharField(primary_key=True, max_length=255)
     user = models.ForeignKey(CustomUser, related_name='token', on_delete=models.CASCADE)
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True, default=timezone.now)

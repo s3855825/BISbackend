@@ -95,7 +95,7 @@ class GroupMemberView(APIView):
 class GroupTaskView(APIView):
     def get(self, request, format=None):
         """
-        show all tasks in group or a specific task
+        show all tasks in group or a specific task based on request param
         """
         return
 
