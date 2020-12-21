@@ -29,7 +29,7 @@ class PostView(APIView):
                 'author_id': post.author.id,
             }
             response_data.append(data)
-            response_data = json.dumps(response_data)
+        response_data = json.dumps(response_data)
         return Response(data=response_data)
 
     def post(self, request, format=None):
