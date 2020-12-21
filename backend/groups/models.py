@@ -14,17 +14,17 @@ class GroupMember(models.Model):
     class Meta:
         db_table = "GroupMember"
 
-    group_id = models.ForeignKey('Group.id', on_delete=models.CASCADE)
-    member_id = models.ForeignKey('accounts.CustomUser.id', on_delete=models.CASCADE)
+    group_id = models.ForeignKey(Group, on_delete=models.CASCADE)
+    member_id = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE)
 
 
 class Task(models.Model):
     class Meta:
         db_table = "Task"
 
-    task_name = models.CharField()
+    task_name = models.CharField(max_length=255)
     author = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE)
-    created_time = models.DateTimeField(auto_created=True, default=timezone.now())
+    created_time = models.DateTimeField(default=timezone.now())
     deadline = models.DateTimeField(default=None)
 
 
