@@ -24,7 +24,6 @@ class PostView(APIView):
     def post(self, request, format=None):
         serializer = PostSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            print('POST SERIALIZER DATA:', serializer.validated_data)
             serializer.save()
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -33,6 +32,7 @@ class PostView(APIView):
 class PostDetailView(APIView):
     def get(self, request, primary_key, format=None):
         try:
+            print('PRIMARY KEY: ', primary_key)
             post = Post.objects.filter(pk=primary_key)
             serializer = PostSerializer(post)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
