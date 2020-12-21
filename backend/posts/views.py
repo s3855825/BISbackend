@@ -26,7 +26,7 @@ class PostView(APIView):
                 'id': post.id,
                 'title': post.title,
                 'message': post.message,
-                'author_id': post.author
+                'author_id': post.author.id,
             }
             response_data.append(data)
         return Response(data=response_data)
