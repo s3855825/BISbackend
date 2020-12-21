@@ -173,13 +173,14 @@ class GroupTaskView(APIView):
         """
         edit task in group or add member to task
         """
-        group = Group.objects.filter(pk=primary_key)
-        if not group:
+        group_queryset = Group.objects.filter(pk=primary_key)
+        if not group_queryset:
             raise Http404('Group does not exist')
-        task = Task.objects.filter(pk=request.data['task_id'])
-        if not group:
+        group = group_queryset[0]
+        task_queryset = Task.objects.filter(pk=request.data['task_id'])
+        if not task_queryset:
             raise Http404('Task does not exist')
-        serializer_data = {'group_id': group.id, 'task_id': request.data['task_id']}
+        serializer_data = {'group_id': group.id, 'task_id': task[0].id}
         serializer = GroupMemberSerializer(data=serializer_data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()

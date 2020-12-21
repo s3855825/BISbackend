@@ -51,20 +51,28 @@ class UserView(APIView):
 class UserDetailView(APIView):
     def get(self, request, primary_key, format=None):
         try:
-            user = CustomUser.objects.get(pk=primary_key)
-            serializer = UserSerializer(user)
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
+            user_queryset = CustomUser.objects.get(pk=primary_key)
+            if user_queryset.count > 0:
+                user = user_queryset[0]
+                serializer = UserSerializer(user)
+                return Response(data=serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(data={'ErrorMessage': 'No user found'}, status=status.HTTP_400_BAD_REQUEST)
         except CustomUser.DoesNotExist:
             raise Http404
 
     def put(self, request, primary_key, format=None):
         try:
-            user = CustomUser.objects.get(pk=primary_key)
-            serializer = UserSerializer(user, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(data=serializer.data, status=status.HTTP_200_OK)
-            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            user_queryset = CustomUser.objects.get(pk=primary_key)
+            if user_queryset.count > 0:
+                user = user_queryset[0]
+                serializer = UserSerializer(user, data=request.data)
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response(data=serializer.data, status=status.HTTP_200_OK)
+                return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response(data={'ErrorMessage': 'No user found'}, status=status.HTTP_400_BAD_REQUEST)
         except CustomUser.DoesNotExist:
             raise Http404
 
