@@ -33,11 +33,11 @@ class PostDetailView(APIView):
     def get(self, request, primary_key, format=None):
         try:
             print('PRIMARY KEY: ', primary_key)
-            post = Post.objects.filter(id=primary_key)
-            serializer = PostSerializer(post)
+            post = Post.objects.filter(pk=primary_key)
+            serializer = PostSerializer(post[0])
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         except Post.DoesNotExist:
-            raise Http404
+            raise Http404('Post does not exist')
 
     def put(self, request, primary_key, format=None):
         try:
@@ -48,7 +48,7 @@ class PostDetailView(APIView):
                 return Response(data=serializer.data, status=status.HTTP_200_OK)
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Post.DoesNotExist:
-            raise Http404
+            raise Http404('Post does not exist')
 
     def delete(self, request, primary_key, format=None):
         try:
