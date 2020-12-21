@@ -1,4 +1,5 @@
 # Create your views here.
+import json
 import rest_framework.status as status
 from django.contrib.auth.models import AnonymousUser
 from django.http import Http404
@@ -6,8 +7,10 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Group, Task
-from .serializers import GroupSerializer, TaskSerializer
+from .models import Group, Task, GroupMember, GroupTask
+from .serializers import GroupSerializer, TaskSerializer, GroupMemberSerializer, GroupTaskSerializer
+from accounts.models import CustomUser
+from accounts.serializers import UserSerializer
 
 
 class HTTP401(AuthenticationFailed):
@@ -46,7 +49,7 @@ class GroupDetailView(APIView):
             serializer = GroupSerializer(group)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         except Group.DoesNotExist:
-            raise HTTP401
+            raise Http404('Group does not exist')
 
     def put(self, request, primary_key, format=None):
         """
@@ -59,7 +62,7 @@ class GroupDetailView(APIView):
                 serializer.save()
                 return Response(data=serializer.data, status=status.HTTP_200_OK)
         except Group.DoesNotExist:
-            raise Http404
+            raise Http404('Group does not exist')
 
     def delete(self, request, primary_key, format=None):
         """
@@ -70,7 +73,7 @@ class GroupDetailView(APIView):
             group.delete()
             return Response(data=[], status=status.HTTP_200_OK)
         except Group.DoesNotExist:
-            raise Http404
+            raise Http404('Group does not exist')
 
 
 class GroupMemberView(APIView):
@@ -78,18 +81,46 @@ class GroupMemberView(APIView):
         """
         show all members in group
         """
-        return
+        # get group
+        group = Group.objects.filter(pk=primary_key)
+        if not group:
+            raise Http404('Group does not exist')
+        member_queryset = GroupMember.objects.filter(group_id=group.id)
+        response_data = []
+        if member.count <= 0:
+            return Response({'EmptyUserList': 'No account in group yet'}, status=status.HTTP_200_OK)
+        else:
+            for member in member_queryset:
+                serializer = UserSerializer(data=member.data)
+                response_data.append(serializer.data)
+            response_data = json.dumps(response_data)
+            return Response(data=response_data, status=status.HTTP_200_OK)
+
 
     def post(self, request, primary_key, format=None):
         """
         add member to group
         """
-        return
+        group = Group.objects.filter(pk=primary_key)
+        if not group:
+            raise Http404('Group does not exist')
+        serializer_data = {'group_id': group.id, 'member_id': request.data['user_id']}
+        serializer = GroupMemberSerializer(data=serializer_data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(data={}, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
     def delete(self, request, primary_key, format=None):
         """
         delete member from group
         """
+        group = Group.objects.filter(pk=primary_key)
+        if not group:
+            raise Http404('Group does not exist')
         return
 
 class GroupTaskView(APIView):
