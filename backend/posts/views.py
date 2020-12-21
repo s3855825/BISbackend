@@ -20,7 +20,7 @@ class PostView(APIView):
         serializer = PostSerializer(post_queryset, many=True)
         if not serializer.data:
             return Response({'EmptyPostList': 'No post made!'})
-        response_data = []
+        response_data = set()
         for post in post_queryset:
             data = {
                 'id': post.id,
@@ -28,7 +28,7 @@ class PostView(APIView):
                 'message': post.message,
                 'author_id': post.author.id,
             }
-            response_data.append(data)
+            response_data.update(data)
         return Response(data=response_data)
 
     def post(self, request, format=None):
