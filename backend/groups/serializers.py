@@ -18,7 +18,7 @@ class GroupMemberSerializer(serializers.Serializer):
 class TaskSerializer(serializers.Serializer):
     class Meta:
         model = Task
-        fields = {"task_name", "description", "created_time", "deadline", "tags", }
+        fields = {"task_name", "description", "created_time", "deadline", }
 
 
 class GroupTaskSerializer(serializers.Serializer):

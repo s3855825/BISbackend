@@ -121,29 +121,83 @@ class GroupMemberView(APIView):
         group = Group.objects.filter(pk=primary_key)
         if not group:
             raise Http404('Group does not exist')
-        return
+        user_id = request.data['user_id']
+        memberlist_queryset = GroupMember.objects.filter(group_id=group.id, member_id=user_id)
+        if memberlist_queryset.count == 0:
+            return Http404('No user in group')
+        else:
+            memberlist_queryset.delete()
+            return Response(data={'': 'User removed from group'}, status=status.HTTP_200_OK)
+
 
 class GroupTaskView(APIView):
     def get(self, request, format=None):
         """
-        show all tasks in group or a specific task based on request param
+        show all tasks in group
         """
-        return
+        group = Group.objects.filter(pk=primary_key)
+        if not group:
+            raise Http404('Group does not exist')
+        task_queryset = GroupTask.objects.filter(group_id=group.id)
+        response_data = []
+        if task_queryset.count <= 0:
+            return Response({'EmptyTaskList': 'No task in group yet'}, status=status.HTTP_200_OK)
+        else:
+            for task in task_queryset:
+                serializer = TaskSerializer(data=task.data)
+                response_data.append(serializer.data)
+            response_data = json.dumps(response_data)
+            return Response(data=response_data, status=status.HTTP_200_OK)
 
     def post(self, request, primary_key, format=None):
         """
-        add post to group
+        add task to group
         """
-        return
+        group = Group.objects.filter(pk=primary_key)
+        if not group:
+            raise Http404('Group does not exist')
+
+        task_serializer_data = {'task_name': request.data['task_name'],
+                                'description': request.data['task_description'],
+                                }
+        task_serializer = TaskSerializer(data=task_serializer_data)
+
+        if task_serializer.is_valid(raise_exception=True):
+            task_serializer.save()
+            group_task_serializer = GroupTaskSerializer(data={'group_id': group.id, })
+            return Response(data={}, status=status.HTTP_200_OK)
+
+        return Response(task_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, primary_key, format=None):
         """
         edit task in group or add member to task
         """
-        return
+        group = Group.objects.filter(pk=primary_key)
+        if not group:
+            raise Http404('Group does not exist')
+        task = Task.objects.filter(pk=request.data['task_id'])
+        if not group:
+            raise Http404('Task does not exist')
+        serializer_data = {'group_id': group.id, 'task_id': request.data['task_id']}
+        serializer = GroupMemberSerializer(data=serializer_data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(data={}, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, primary_key, format=None):
         """
         delete task in group
         """
-        return
+        group = Group.objects.filter(pk=primary_key)
+        if not group:
+            raise Http404('Group does not exist')
+        task_id = request.data['task_id']
+        tasklist_queryset = GroupTask.objects.filter(group_id=group.id, task_id=task_id)
+        if tasklist_queryset.count == 0:
+            return Http404('No task in group')
+        else:
+            tasklist_queryset.delete()
+            return Response(data={'': 'Task removed from group'}, status=status.HTTP_200_OK)
