@@ -1,8 +1,8 @@
 import binascii
 import os
 
-# from django.contrib.auth.models import User
 from django.http import Http404
+from posts.models import Post
 from rest_framework import status
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
@@ -51,8 +51,8 @@ class UserView(APIView):
 class UserDetailView(APIView):
     def get(self, request, primary_key, format=None):
         try:
-            user_queryset = CustomUser.objects.get(pk=primary_key)
-            if user_queryset.count > 0:
+            user_queryset = CustomUser.objects.filter(pk=primary_key)
+            if len(user_queryset) > 0:
                 user = user_queryset[0]
                 serializer = UserSerializer(user)
                 return Response(data=serializer.data, status=status.HTTP_200_OK)
@@ -118,3 +118,23 @@ class UserAuthView(APIView):
                 return Response(data=token_serializer.data, status=status.HTTP_200_OK)
             else:
                 raise HTTP401(token_serializer.errors)
+
+
+class UserPostView(APIView):
+    def get(self, request, primary_key, format=None):
+        # current_user = CustomUser.objects.get(primary_key)
+        user_post_queryset = Post.objects.filter(author=primary_key)
+        if len(user_post_queryset) == 0:
+            return Response(data={'': "You don't have any post yet :<"}, status=status.HTTP_200_OK)
+        response_data = []
+        for post in user_post_queryset:
+            data = {
+                'id': post.id,
+                'title': post.title,
+                'message': post.message,
+                'author_id': post.author.id,
+                'author_name': post.author.username,
+                'created_time': post.timestamp,
+            }
+            response_data.append(data)
+        return Response(data=response_data, status=status.HTTP_200_OK)

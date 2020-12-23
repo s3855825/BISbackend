@@ -1,4 +1,3 @@
-import json
 import rest_framework.status as status
 from django.http import Http404
 from rest_framework.exceptions import AuthenticationFailed
@@ -14,7 +13,7 @@ class HTTP401(AuthenticationFailed):
 
 
 # Create your views here.
-class PostView(APIView):    
+class PostView(APIView):
     def get(self, request, format=None):
         post_queryset = Post.objects.all()
         serializer = PostSerializer(post_queryset, many=True)

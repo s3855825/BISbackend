@@ -2,7 +2,6 @@ from django.urls import path
 
 from . import views
 
-
 urlpatterns = [
     path('', views.GroupView.as_view(), name='groups_all'),
     path('<int:primary_key>/', views.GroupDetailView.as_view(), name='groups_details'),

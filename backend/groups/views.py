@@ -1,15 +1,14 @@
 # Create your views here.
-import json
 
 import rest_framework.status as status
+from accounts.models import CustomUser
 from django.http import Http404
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from accounts.models import CustomUser
 from .models import Group, Task, GroupMember, GroupTask
-from .serializers import GroupSerializer, TaskSerializer, GroupMemberSerializer, GroupTaskSerializer
+from .serializers import GroupSerializer, GroupMemberSerializer, GroupTaskSerializer
 
 
 class HTTP401(AuthenticationFailed):
