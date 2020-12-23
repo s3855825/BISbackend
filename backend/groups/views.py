@@ -2,12 +2,12 @@
 import json
 
 import rest_framework.status as status
-from accounts.serializers import UserSerializer
 from django.http import Http404
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from accounts.models import CustomUser
 from .models import Group, Task, GroupMember, GroupTask
 from .serializers import GroupSerializer, TaskSerializer, GroupMemberSerializer, GroupTaskSerializer
 
@@ -88,18 +88,21 @@ class GroupMemberView(APIView):
         show all members in group
         """
         # get group
-        group_queryset = Group.objects.get(pk=primary_key)
-        if not group_queryset:
+        group = Group.objects.get(pk=primary_key)
+        if not group:
             raise Http404('Group does not exist')
-        member_queryset = GroupMember.objects.filter(group_id=group_queryset.id)
+        member_queryset = GroupMember.objects.filter(group_id=group.id)
         response_data = []
         if len(member_queryset) <= 0:
             return Response({'EmptyUserList': 'No account in group yet'}, status=status.HTTP_200_OK)
         else:
             for member in member_queryset:
-                serializer = UserSerializer(data=member.data)
-                response_data.append(serializer.data)
-            response_data = json.dumps(response_data)
+                user = CustomUser.objects.get(pk=member.id)
+                data = {
+                    'member_id': user.id,
+                    'member_name': user.username,
+                }
+                response_data.append(data)
             return Response(data=response_data, status=status.HTTP_200_OK)
 
     def post(self, request, primary_key, format=None):
@@ -109,6 +112,12 @@ class GroupMemberView(APIView):
         group = Group.objects.get(pk=primary_key)
         if not group:
             raise Http404('Group does not exist')
+
+        group_member_queryset = GroupMember.objects.filter(group_id=group.id, member_id=request.data['user_id'])
+        if len(group_member_queryset) >= 1:
+            return Response(data={'UserAlreadyExist': 'This user is already in this group'},
+                            status=status.HTTP_200_OK)
+
         serializer_data = {'group_id': group.id, 'member_id': request.data['user_id']}
         serializer = GroupMemberSerializer(data=serializer_data)
         if serializer.is_valid(raise_exception=True):
@@ -134,7 +143,7 @@ class GroupMemberView(APIView):
 
 
 class GroupTaskView(APIView):
-    def get(self, request, format=None):
+    def get(self, request, primary_key, format=None):
         """
         show all tasks in group
         """
