@@ -42,12 +42,10 @@ class PostView(APIView):
 class PostDetailView(APIView):
     def get(self, request, primary_key, format=None):
         try:
-            print('PRIMARY KEY: ', primary_key)
-            post_queryset = Post.objects.filter(pk=primary_key)
-            if post_queryset.count > 0:
-                serializer = PostSerializer(post_queryset[0])
-                return Response(data=serializer.data, status=status.HTTP_200_OK)
-        except IndexError:
+            post_queryset = Post.objects.get(pk=primary_key)
+            serializer = PostSerializer(post_queryset[0])
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        except Post.DoesNotExist:
             raise Http404('Post does not exist')
 
     def put(self, request, primary_key, format=None):

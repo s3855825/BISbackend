@@ -1,7 +1,8 @@
 # Create your views here.
 import json
+
 import rest_framework.status as status
-from django.contrib.auth.models import AnonymousUser
+from accounts.serializers import UserSerializer
 from django.http import Http404
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
@@ -9,8 +10,6 @@ from rest_framework.views import APIView
 
 from .models import Group, Task, GroupMember, GroupTask
 from .serializers import GroupSerializer, TaskSerializer, GroupMemberSerializer, GroupTaskSerializer
-from accounts.models import CustomUser
-from accounts.serializers import UserSerializer
 
 
 class HTTP401(AuthenticationFailed):
@@ -22,11 +21,18 @@ class GroupView(APIView):
         """
         show all groups
         """
-        groups = Group.objects.all()
-        serializer = GroupSerializer(groups, many=True)
+        group_queryset = Group.objects.all()
+        serializer = GroupSerializer(group_queryset, many=True)
         if not serializer.data:
             return Response({'EmptyGroupList': 'No group created!'})
-        return serializer.data
+        response_data = []
+        for group in group_queryset:
+            data = {
+                'id': group.id,
+                'name': group.group_name,
+            }
+            response_data.append(data)
+        return Response(data=response_data)
 
     def post(self, request, format=None):
         """
@@ -45,11 +51,11 @@ class GroupDetailView(APIView):
         show group details
         """
         try:
-            group = Group.objects.filter(pk=primary_key)
-            serializer = GroupSerializer(group)
+            group_queryset = Group.objects.get(pk=primary_key)
+            serializer = GroupSerializer(group_queryset)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         except Group.DoesNotExist:
-            raise Http404('Group does not exist')
+            raise Http404('This group does not exist')
 
     def put(self, request, primary_key, format=None):
         """
@@ -82,12 +88,12 @@ class GroupMemberView(APIView):
         show all members in group
         """
         # get group
-        group = Group.objects.filter(pk=primary_key)
-        if not group:
+        group_queryset = Group.objects.get(pk=primary_key)
+        if not group_queryset:
             raise Http404('Group does not exist')
-        member_queryset = GroupMember.objects.filter(group_id=group.id)
+        member_queryset = GroupMember.objects.filter(group_id=group_queryset.id)
         response_data = []
-        if member.count <= 0:
+        if len(member_queryset) <= 0:
             return Response({'EmptyUserList': 'No account in group yet'}, status=status.HTTP_200_OK)
         else:
             for member in member_queryset:
@@ -96,12 +102,11 @@ class GroupMemberView(APIView):
             response_data = json.dumps(response_data)
             return Response(data=response_data, status=status.HTTP_200_OK)
 
-
     def post(self, request, primary_key, format=None):
         """
         add member to group
         """
-        group = Group.objects.filter(pk=primary_key)
+        group = Group.objects.get(pk=primary_key)
         if not group:
             raise Http404('Group does not exist')
         serializer_data = {'group_id': group.id, 'member_id': request.data['user_id']}
@@ -111,8 +116,6 @@ class GroupMemberView(APIView):
             return Response(data={}, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 
     def delete(self, request, primary_key, format=None):
         """
