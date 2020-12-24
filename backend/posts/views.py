@@ -89,5 +89,6 @@ class PostSearchView(APIView):
                 'message': post.message,
                 'author_id': post.author.id,
             }
+            print(data)
             response_data.append(data)
         return Response(data=response_data, status=status.HTTP_200_OK)
