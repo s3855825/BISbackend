@@ -10,6 +10,9 @@ class PostManager(models.Manager):
         return "it is really using a custom manager"
 
     def search(self, search_text):
+
+        print('SEARCH TEXT: ', search_text)
+
         search_vectors = (
                 SearchVector(
                     'title',
@@ -22,19 +25,26 @@ class PostManager(models.Manager):
                     config='english',
                 )
         )
+
         search_query = SearchQuery(
             search_text, config='english'
         )
+
+        print(search_query.field)
+
         search_rank = SearchRank(search_vectors, search_query)
+
         trigram_similarity = TrigramSimilarity(
             'title', search_text
         )
+
         queryset = (
             self.get_queryset()
                 .filter(search_vector=search_query)
                 .annotate(rank=search_rank + trigram_similarity)
                 .order_by('-rank')
         )
+
         return queryset
 
 
