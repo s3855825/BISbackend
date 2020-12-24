@@ -23,11 +23,11 @@ class PostManager(models.Manager):
                 )
         )
 
+        print('SEARCH VECTOR: ', search_vectors.as_sql())
+
         search_query = SearchQuery(
             search_text, config='english'
         )
-
-        print([i for i in search_query.field])
 
         search_rank = SearchRank(search_vectors, search_query)
 
