@@ -6,9 +6,6 @@ from django.utils import timezone
 
 # Create your models here.
 class PostManager(models.Manager):
-    def __str__(self):
-        return "it is really using a custom manager"
-
     def search(self, search_text):
 
         print('SEARCH TEXT: ', search_text)
@@ -30,7 +27,7 @@ class PostManager(models.Manager):
             search_text, config='english'
         )
 
-        print(search_query.field)
+        print([i for i in search_query.field])
 
         search_rank = SearchRank(search_vectors, search_query)
 
