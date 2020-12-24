@@ -1,5 +1,5 @@
-from django.contrib.postgres.search import SearchVector, SearchVectorField, TrigramSimilarity, SearchRank, SearchQuery
 from django.contrib.postgres.aggregates import StringAgg
+from django.contrib.postgres.search import SearchVector, SearchVectorField, TrigramSimilarity, SearchRank, SearchQuery
 from django.db import models
 from django.utils import timezone
 
@@ -11,16 +11,16 @@ class PostManager(models.Manager):
 
     def search(self, search_text):
         search_vectors = (
-            SearchVector(
-                'title',
-                weight='A',
-                config='english'
-            )
-            + SearchVector(
-                StringAgg('message', delimiter=' '),
-                weight='B',
-                config='english',
-            )
+                SearchVector(
+                    'title',
+                    weight='A',
+                    config='english'
+                )
+                + SearchVector(
+                    StringAgg('message', delimiter=' '),
+                    weight='B',
+                    config='english',
+                )
         )
         search_query = SearchQuery(
             search_text, config='english'
@@ -31,9 +31,9 @@ class PostManager(models.Manager):
         )
         queryset = (
             self.get_queryset()
-            .filter(search_vector=search_query)
-            .annotate(rank=search_rank + trigram_similarity)
-            .order_by('-rank')
+                .filter(search_vector=search_query)
+                .annotate(rank=search_rank + trigram_similarity)
+                .order_by('-rank')
         )
         return queryset
 

@@ -80,7 +80,7 @@ class PostSearchView(APIView):
 
         posts_search_result = Post.objects.search(query_text)
         print(type(posts_search_result))
-        print(posts_search_result)
+        print(len(posts_search_result))
         response_data = []
         for post in posts_search_result:
             data = {
