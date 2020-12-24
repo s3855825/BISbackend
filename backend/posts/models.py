@@ -16,11 +16,11 @@ class PostManager(models.Manager):
                     weight='A',
                     config='english'
                 )
-                + SearchVector(
-                    StringAgg('message', delimiter=' '),
-                    weight='B',
-                    config='english',
-                )
+                # + SearchVector(
+                #     StringAgg('message', delimiter=' '),
+                #     weight='B',
+                #     config='english',
+                # )
         )
 
         print('SEARCH VECTOR: ', search_vectors)
