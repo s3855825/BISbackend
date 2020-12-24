@@ -76,6 +76,8 @@ class PostSearchView(APIView):
         if not query_text:
             return Response({'': "Empty search phrase"}, status=status.HTTP_400_BAD_REQUEST)
 
+        print(Post.objects)
+
         posts_search_result = Post.objects.search(query_text)
         print(type(posts_search_result))
         print(posts_search_result)
