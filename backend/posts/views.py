@@ -1,6 +1,5 @@
 import rest_framework.status as status
 from django.http import Http404
-from django.contrib.postgres.search import SearchQuery
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -73,4 +72,20 @@ class PostDetailView(APIView):
 
 class PostSearchView(APIView):
     def get(self, request, format=None):
-        pass
+        query_text = request.data['querytext']
+        if not query_text:
+            return Response({'': "Empty search phrase"}, status=status.HTTP_400_BAD_REQUEST)
+
+        posts_search_result = Post.objects.search(query_text)
+        print(type(posts_search_result))
+        print(posts_search_result)
+        response_data = []
+        for post in posts_search_result:
+            data = {
+                'id': post.id,
+                'title': post.title,
+                'message': post.message,
+                'author_id': post.author.id,
+            }
+            response_data.append(data)
+        return Response(data=response_data, status=status.HTTP_200_OK)
