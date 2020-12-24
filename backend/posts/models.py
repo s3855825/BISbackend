@@ -1,48 +1,10 @@
-from django.contrib.postgres.aggregates import StringAgg
-from django.contrib.postgres.search import SearchVector, SearchVectorField, TrigramSimilarity, SearchRank, SearchQuery
 from django.db import models
 from django.utils import timezone
 
 
 # Create your models here.
 class PostManager(models.Manager):
-    def search(self, search_text):
-
-        print('SEARCH TEXT: ', search_text)
-
-        search_vectors = (
-                SearchVector(
-                    'title',
-                    weight='A',
-                    config='english'
-                )
-                + SearchVector(
-                    StringAgg('message', delimiter=' '),
-                    weight='B',
-                    config='english',
-                )
-        )
-
-        print('SEARCH VECTOR: ', search_vectors)
-
-        search_query = SearchQuery(
-            search_text, config='english'
-        )
-
-        search_rank = SearchRank(search_vectors, search_query)
-
-        trigram_similarity = TrigramSimilarity(
-            'title', search_text
-        )
-
-        queryset = (
-            self.get_queryset()
-                .filter(search_vector=search_query)
-                .annotate(rank=search_rank + trigram_similarity)
-                .order_by('-rank')
-        )
-
-        return queryset
+    pass
 
 
 class Post(models.Model):
@@ -54,15 +16,15 @@ class Post(models.Model):
     timestamp = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE)
 
-    search_vector = SearchVectorField(null=True)
+    # search_vector = SearchVectorField(null=True)
     objects = PostManager()
 
     def __str__(self):
         return '{}: {}'.format(self.author.username, self.title)
 
-    def save(self, *args, **kwargs):
-        self.search_vector = (
-                SearchVector('title', weight='A')
-                + SearchVector('message', weight='B')
-        )
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     self.search_vector = (
+    #             SearchVector('title', weight='A')
+    #             + SearchVector('message', weight='B')
+    #     )
+    #     super().save(*args, **kwargs)

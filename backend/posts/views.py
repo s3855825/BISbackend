@@ -76,11 +76,11 @@ class PostSearchView(APIView):
         if not query_text:
             return Response({'': "Empty search phrase"}, status=status.HTTP_400_BAD_REQUEST)
 
-        posts_search_result = Post.objects.search(query_text)
-        print('POST SEARCH RESULT: ', posts_search_result)
+        title_search_result = Post.objects.filter(title__search=query_text)
+        message_search_result = Post.objects.filter(message__search=query_text)
 
         response_data = []
-        for post in posts_search_result:
+        for post in title_search_result:
             data = {
                 'id': post.id,
                 'title': post.title,
@@ -89,4 +89,15 @@ class PostSearchView(APIView):
             }
             print(data)
             response_data.append(data)
+
+        for post in message_search_result:
+            data = {
+                'id': post.id,
+                'title': post.title,
+                'message': post.message,
+                'author_id': post.author.id,
+            }
+            print(data)
+            response_data.append(data)
+
         return Response(data=response_data, status=status.HTTP_200_OK)
