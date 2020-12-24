@@ -79,6 +79,9 @@ class PostSearchView(APIView):
         title_search_result = Post.objects.filter(title__search=query_text)
         message_search_result = Post.objects.filter(message__search=query_text)
 
+        print(title_search_result)
+        print(message_search_result)
+
         response_data = []
         for post in title_search_result:
             data = {
