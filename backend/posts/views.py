@@ -1,5 +1,6 @@
 import rest_framework.status as status
 from django.http import Http404
+from django.contrib.postgres.search import SearchQuery
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -68,3 +69,8 @@ class PostDetailView(APIView):
             return Response(data=[], status=status.HTTP_200_OK)
         except Post.DoesNotExist:
             raise Http404
+
+
+class PostSearchView(APIView):
+    def get(self, request, format=None):
+        pass
