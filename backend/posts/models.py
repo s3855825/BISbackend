@@ -23,7 +23,7 @@ class PostManager(models.Manager):
                 )
         )
 
-        print('SEARCH VECTOR: ', search_vectors.as_sql())
+        print('SEARCH VECTOR: ', search_vectors)
 
         search_query = SearchQuery(
             search_text, config='english'
