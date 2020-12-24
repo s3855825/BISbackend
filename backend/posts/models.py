@@ -6,6 +6,9 @@ from django.utils import timezone
 
 # Create your models here.
 class PostManager(models.Manager):
+    def __str__(self):
+        return "it is really using a custom manager"
+
     def search(self, search_text):
         search_vectors = (
             SearchVector(
