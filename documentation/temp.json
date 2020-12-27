@@ -1,0 +1,1073 @@
+{
+    "accounts/": {
+        "get": {
+            "tags": [
+                "account"
+            ],
+            "summary": "View all registered accounts",
+            "description": "",
+            "operationId": "AccountView",
+            "consumes": [
+                "application/json",
+                "application/xml"
+            ],
+            "produces": [
+                "application/json",
+                "application/xml"
+            ],
+            "parameters": [],
+            "responses": [
+                {
+                    "200": {
+                        "description": "Showing all accounts"
+                    },
+                    "404": {
+                        "description": "EmptyUserList: No user registered"
+                    }
+                }
+            ],
+            "security": [
+                {
+                    "token_auth": [
+                        "read: account"
+                    ]
+                }
+            ]
+        },
+        "post": {
+            "tags": [
+                "account"
+            ],
+            "summary": "Register a new account",
+            "description": "",
+            "operationId": "AccountView",
+            "consumes": [
+                "application/json",
+                "application/xml"
+            ],
+            "produces": [
+                "application/json",
+                "application/xml"
+            ],
+            "parameters": [
+                {
+                    "in": "body",
+                    "name": "username",
+                    "description": "Account's username",
+                    "required": true,
+                    "schema": {}
+                },
+                {
+                    "in": "body",
+                    "name": "email",
+                    "description": "Account's email",
+                    "required": true,
+                    "schema": {}
+                },
+                {
+                    "in": "body",
+                    "name": "password",
+                    "description": "Account's password",
+                    "required": true,
+                    "schema": {}
+                }
+            ],
+            "responses": [
+                {
+                    "201": {
+                        "description": "Account created"
+                    },
+                    "400": {
+                        "description": "Username or password is already in used"
+                    }
+                }
+            ],
+            "security": [
+                {
+                    "token_auth": [
+                        "read: account",
+                        "write: account"
+                    ]
+                }
+            ]
+        }
+    },
+    "accounts/auth/": {
+        "post": {
+            "tags": [
+                "account"
+            ],
+            "summary": "Log in an account",
+            "description": "",
+            "operationId": "AccountAuthView",
+            "consumes": [
+                "application/json",
+                "application/xml"
+            ],
+            "produces": [
+                "application/json",
+                "application/xml"
+            ],
+            "parameters": [
+                {
+                    "in": "body",
+                    "name": "username",
+                    "required": true,
+                    "type": "string",
+                    "description": ""
+                },
+                {
+                    "in": "body",
+                    "name": "password",
+                    "required": true,
+                    "type": "string",
+                    "description": ""
+                }
+            ],
+            "responses": [
+                {
+                    "200": {
+                        "description": "Successfully logged account",
+                        "id": "user.id",
+                        "username": "user.username",
+                        "email": "user.email"
+                    },
+                    "400": {
+                        "description": "Invalid username or password"
+                    }
+                }
+            ],
+            "security": [
+                {
+                    "token_auth": [
+                        "read: account",
+                        "write: account"
+                    ]
+                }
+            ]
+        }
+    },
+    "accounts/<int:primary_key>": {
+        "get": {
+            "tags": [
+                "account"
+            ],
+            "summary": "View detailed information of a single user",
+            "description": "",
+            "operationId": "AccountDetailView",
+            "consumes": [
+                "application/json",
+                "application/xml"
+            ],
+            "produces": [
+                "application/json",
+                "application/xml"
+            ],
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "primary_key",
+                    "required": true,
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": ""
+                }
+            ],
+            "responses": [
+                {
+                    "200": {
+                        "description": "Showing accounts <id> details",
+                        "id": "user.id",
+                        "username": "user.username",
+                        "email": "user.email",
+                        "token": "token.key"
+                    },
+                    "404": {
+                        "description": "EmptyUserList: No user with this <id> found"
+                    }
+                }
+            ],
+            "security": [
+                {
+                    "token_auth": [
+                        "read: account"
+                    ]
+                }
+            ]
+        },
+        "put": {
+            "tags": [
+                "account"
+            ],
+            "summary": "Modify details of an account",
+            "description": "",
+            "operationId": "AccountDetailView",
+            "consumes": [
+                "application/json",
+                "application/xml"
+            ],
+            "produces": [
+                "application/json",
+                "application/xml"
+            ],
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "primary_key",
+                    "required": true,
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": ""
+                },
+                {
+                    "in": "body",
+                    "name": "username",
+                    "required": false,
+                    "type": "string",
+                    "description": ""
+                },
+                {
+                    "in": "body",
+                    "name": "email",
+                    "required": false,
+                    "type": "string",
+                    "description": ""
+                },
+                {
+                    "in": "body",
+                    "name": "password",
+                    "required": false,
+                    "type": "string",
+                    "description": ""
+                }
+            ],
+            "responses": [
+                {
+                    "200": {
+                        "description": "Successfully modified account"
+                    },
+                    "404": {
+                        "description": "EmptyUserList: No user found at <id>"
+                    }
+                }
+            ],
+            "security": [
+                {
+                    "token_auth": [
+                        "read: account",
+                        "write: account"
+                    ]
+                }
+            ]
+        },
+        "delete": {
+            "tags": [
+                "account"
+            ],
+            "summary": "Delete an account",
+            "description": "",
+            "operationId": "AccountDetailView",
+            "consumes": [
+                "application/json",
+                "application/xml"
+            ],
+            "produces": [
+                "application/json",
+                "application/xml"
+            ],
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "primary_key",
+                    "required": true,
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": ""
+                }
+            ],
+            "responses": [
+                {
+                    "200": {
+                        "description": "Successfully deleted account"
+                    },
+                    "404": {
+                        "description": "EmptyUserList: No user found at <id>"
+                    }
+                }
+            ],
+            "security": [
+                {
+                    "token_auth": [
+                        "read: account",
+                        "write: account"
+                    ]
+                }
+            ]
+        }
+    },
+    "accounts/<int:primary_key>/posts/": {
+        "get": {
+            "tags": [
+                "account"
+            ],
+            "summary": "View all posts made by an user",
+            "description": "",
+            "operationId": "AccountPostView",
+            "consumes": [
+                "application/json",
+                "application/xml"
+            ],
+            "produces": [
+                "application/json",
+                "application/xml"
+            ],
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "primary_key",
+                    "required": true,
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": ""
+                }
+            ],
+            "responses": [
+                {
+                    "200": {
+                        "description": "Showing accounts <id> details",
+                        "id": "post.id",
+                        "title": "post.title",
+                        "message": "post.message",
+                        "author_id": "post.author.id",
+                        "author_name": "post.author.username",
+                        "created_time": "post.timestamp"
+                    },
+                    "404": {
+                        "description": "EmptyUserList: No user with this <id> found"
+                    }
+                }
+            ],
+            "security": [
+                {
+                    "token_auth": [
+                        "read: account",
+                        "read: post"
+                    ]
+                }
+            ]
+        }
+    },
+    "accounts/<int:primary_key>/groups/": {
+        "get": {
+            "tags": [
+                "account"
+            ],
+            "summary": "View all groups that include an user",
+            "description": "",
+            "operationId": "AccountGroupView",
+            "consumes": [
+                "application/json",
+                "application/xml"
+            ],
+            "produces": [
+                "application/json",
+                "application/xml"
+            ],
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "primary_key",
+                    "required": true,
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": ""
+                }
+            ],
+            "responses": [
+                {
+                    "200": {
+                        "description": "Showing accounts <id> groups",
+                        "id": "group.id",
+                        "name": "group.name"
+                    },
+                    "404": {
+                        "description": "EmptyGroupList: User <id> doesn't have any group"
+                    }
+                }
+            ],
+            "security": [
+                {
+                    "token_auth": [
+                        "read: account",
+                        "read: group",
+                        "read: GroupMember"
+                    ]
+                }
+            ]
+        }
+    },
+    "posts/": {
+        "get": {
+            "tags": [
+                "posts"
+            ],
+            "summary": "View all available posts",
+            "description": "",
+            "operationId": "PostView",
+            "consumes": [
+                "application/json",
+                "application/xml"
+            ],
+            "produces": [
+                "application/json",
+                "application/xml"
+            ],
+            "parameters": [],
+            "responses": [
+                {
+                    "200": {
+                        "description": "Showing all posts available",
+                        "id": "post.id",
+                        "title": "post.title",
+                        "message": "post.message",
+                        "author_id": "post.author.id"
+                    },
+                    "404": {
+                        "description": "EmptyPostList: No post created"
+                    }
+                }
+            ],
+            "security": [
+                {
+                    "token_auth": [
+                        "read: post"
+                    ]
+                }
+            ]
+        },
+        "post": {
+            "tags": [
+                "posts"
+            ],
+            "summary": "Create a new post",
+            "description": "",
+            "operationId": "PostView",
+            "consumes": [
+                "application/json",
+                "application/xml"
+            ],
+            "produces": [
+                "application/json",
+                "application/xml"
+            ],
+            "parameters": [
+                {
+                    "in": "body",
+                    "name": "title",
+                    "description": "Post's title",
+                    "required": true,
+                    "schema": {}
+                },
+                {
+                    "in": "body",
+                    "name": "message",
+                    "description": "Post's message",
+                    "required": true,
+                    "schema": {}
+                },
+                {
+                    "in": "body",
+                    "name": "author_id",
+                    "description": "Post's author's id",
+                    "required": true,
+                    "schema": {}
+                }
+            ],
+            "responses": [
+                {
+                    "201": {
+                        "description": "Post created",
+                        "id": "post.id",
+                        "title": "post.title",
+                        "message": "post.message",
+                        "author_id": "post.author.id"
+                    },
+                    "400": {
+                        "description": "Post's title or message cannot be empty"
+                    }
+                }
+            ],
+            "security": [
+                {
+                    "token_auth": [
+                        "write: post"
+                    ]
+                }
+            ]
+        }
+    },
+    "posts/<int:primary_key>/": {
+        "get": {
+            "tags": [
+                "post"
+            ],
+            "summary": "View detailed information of a single post",
+            "description": "",
+            "operationId": "PostDetailView",
+            "consumes": [
+                "application/json",
+                "application/xml"
+            ],
+            "produces": [
+                "application/json",
+                "application/xml"
+            ],
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "primary_key",
+                    "required": true,
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": ""
+                }
+            ],
+            "responses": [
+                {
+                    "200": {
+                        "description": "Showing accounts <id> details",
+                        "id": "post.id",
+                        "title": "post.title",
+                        "message": "post.message",
+                        "author_id": "post.author.id"
+                    },
+                    "404": {
+                        "description": "EmptyUserList: No post with this <id> found"
+                    }
+                }
+            ],
+            "security": [
+                {
+                    "token_auth": [
+                        "read: post"
+                    ]
+                }
+            ]
+        },
+        "put": {
+            "tags": [
+                "post"
+            ],
+            "summary": "Modify details of a post",
+            "description": "",
+            "operationId": "PostDetailView",
+            "consumes": [
+                "application/json",
+                "application/xml"
+            ],
+            "produces": [
+                "application/json",
+                "application/xml"
+            ],
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "primary_key",
+                    "required": true,
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": ""
+                },
+                {
+                    "in": "body",
+                    "name": "title",
+                    "required": false,
+                    "type": "string",
+                    "description": ""
+                },
+                {
+                    "in": "body",
+                    "name": "message",
+                    "required": false,
+                    "type": "string",
+                    "description": ""
+                }
+            ],
+            "responses": [
+                {
+                    "200": {
+                        "description": "Successfully modified post"
+                    },
+                    "404": {
+                        "description": "EmptyPostList: No post found at <id>"
+                    }
+                }
+            ],
+            "security": [
+                {
+                    "token_auth": [
+                        "read: post",
+                        "write: post"
+                    ]
+                }
+            ]
+        },
+        "delete": {
+            "tags": [
+                "post"
+            ],
+            "summary": "Delete a post",
+            "description": "",
+            "operationId": "PostDetailView",
+            "consumes": [
+                "application/json",
+                "application/xml"
+            ],
+            "produces": [
+                "application/json",
+                "application/xml"
+            ],
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "primary_key",
+                    "required": true,
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": ""
+                }
+            ],
+            "responses": [
+                {
+                    "200": {
+                        "description": "Successfully deleted post"
+                    },
+                    "404": {
+                        "description": "EmptyPostList: No post found at <id>"
+                    }
+                }
+            ],
+            "security": [
+                {
+                    "token_auth": [
+                        "read: post",
+                        "write: post"
+                    ]
+                }
+            ]
+        }
+    },
+    "posts/search/": {
+        "get": {
+            "tags": [
+                "post"
+            ],
+            "summary": "Search for post(s) that match the query text",
+            "description": "",
+            "operationId": "PostSearchView",
+            "consumes": [
+                "application/json",
+                "application/xml"
+            ],
+            "produces": [
+                "application/json",
+                "application/xml"
+            ],
+            "parameters": [
+                {
+                    "in": "body",
+                    "name": "querytext",
+                    "required": true,
+                    "type": "string",
+                    "description": ""
+                }
+            ],
+            "responses": [
+                {
+                    "200": {
+                        "description": "Showing accounts <id> details",
+                        "id": "post.id",
+                        "title": "post.title",
+                        "message": "post.message",
+                        "author_id": "post.author.id"
+                    },
+                    "404": {
+                        "description": "EmptyPostList: No matching post found"
+                    }
+                }
+            ],
+            "security": [
+                {
+                    "token_auth": [
+                        "read: post"
+                    ]
+                }
+            ]
+        }
+    },
+    "groups/": {
+        "get": {
+            "tags": [
+                "group"
+            ],
+            "summary": "View all created groups",
+            "description": "",
+            "operationId": "GroupView",
+            "consumes": [
+                "application/json",
+                "application/xml"
+            ],
+            "produces": [
+                "application/json",
+                "application/xml"
+            ],
+            "parameters": [],
+            "responses": [
+                {
+                    "200": {
+                        "description": "Showing all groups available"
+                    },
+                    "404": {
+                        "description": "EmptyGroupList: No group created"
+                    }
+                }
+            ],
+            "security": [
+                {
+                    "token_auth": [
+                        "read: account"
+                    ]
+                }
+            ]
+        },
+        "post": {
+            "tags": [
+                "group"
+            ],
+            "summary": "Register a new group",
+            "description": "",
+            "operationId": "GroupView",
+            "consumes": [
+                "application/json",
+                "application/xml"
+            ],
+            "produces": [
+                "application/json",
+                "application/xml"
+            ],
+            "parameters": [
+                {
+                    "in": "body",
+                    "name": "group_name",
+                    "description": "Group's name",
+                    "required": true,
+                    "schema": {}
+                }
+            ],
+            "responses": [
+                {
+                    "201": {
+                        "description": "Group created"
+                    },
+                    "400": {
+                        "description": "Group name cannot be empty"
+                    }
+                }
+            ],
+            "security": [
+                {
+                    "token_auth": [
+                        "write: group"
+                    ]
+                }
+            ]
+        }
+    },
+    "groups/<int:primary_key>/": {
+        "get": {
+            "tags": [
+                "group"
+            ],
+            "summary": "View detailed information of a single group",
+            "description": "",
+            "operationId": "GroupDetailView",
+            "consumes": [
+                "application/json",
+                "application/xml"
+            ],
+            "produces": [
+                "application/json",
+                "application/xml"
+            ],
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "primary_key",
+                    "required": true,
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": ""
+                }
+            ],
+            "responses": [
+                {
+                    "200": {
+                        "description": "Showing group <id> details",
+                        "id": "group.id",
+                        "username": "group.name"
+                    },
+                    "404": {
+                        "description": "EmptyGrouprList: No group with this <id> found"
+                    }
+                }
+            ],
+            "security": [
+                {
+                    "token_auth": [
+                        "read: group"
+                    ]
+                }
+            ]
+        },
+        "put": {
+            "tags": [
+                "group"
+            ],
+            "summary": "Modify details of a group",
+            "description": "",
+            "operationId": "GroupDetailView",
+            "consumes": [
+                "application/json",
+                "application/xml"
+            ],
+            "produces": [
+                "application/json",
+                "application/xml"
+            ],
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "primary_key",
+                    "required": true,
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": ""
+                },
+                {
+                    "in": "body",
+                    "name": "group_name",
+                    "required": true,
+                    "type": "string",
+                    "description": ""
+                }
+            ],
+            "responses": [
+                {
+                    "200": {
+                        "description": "Successfully modified group's information"
+                    },
+                    "404": {
+                        "description": "EmptyGroupList: No group found at <id>"
+                    }
+                }
+            ],
+            "security": [
+                {
+                    "token_auth": [
+                        "read: group",
+                        "write: group"
+                    ]
+                }
+            ]
+        },
+        "delete": {
+            "tags": [
+                "group"
+            ],
+            "summary": "Delete a group",
+            "description": "",
+            "operationId": "GroupDetailView",
+            "consumes": [
+                "application/json",
+                "application/xml"
+            ],
+            "produces": [
+                "application/json",
+                "application/xml"
+            ],
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "primary_key",
+                    "required": true,
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": ""
+                }
+            ],
+            "responses": [
+                {
+                    "200": {
+                        "description": "Successfully deleted group"
+                    },
+                    "404": {
+                        "description": "EmptyGroupList: No group found at <id>"
+                    }
+                }
+            ],
+            "security": [
+                {
+                    "token_auth": [
+                        "read: group",
+                        "write: group"
+                    ]
+                }
+            ]
+        }
+    },
+    "groups/<int:primary_key>/members/": {
+        "get": {
+            "tags": [
+                "account"
+            ],
+            "summary": "View the list of all members in group",
+            "description": "",
+            "operationId": "GroupMemberView",
+            "consumes": [
+                "application/json",
+                "application/xml"
+            ],
+            "produces": [
+                "application/json",
+                "application/xml"
+            ],
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "primary_key",
+                    "required": true,
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": ""
+                }
+            ],
+            "responses": [
+                {
+                    "200": {
+                        "description": "Showing group <id> member list",
+                        "id": "user.id",
+                        "username": "user.username",
+                        "email": "user.email",
+                        "token": "token.key"
+                    },
+                    "404": {
+                        "description": "EmptyUserList: This group does not have any user yet"
+                    }
+                }
+            ],
+            "security": [
+                {
+                    "token_auth": [
+                        "read: GroupMember"
+                    ]
+                }
+            ]
+        },
+        "post": {
+            "tags": [
+                "group"
+            ],
+            "summary": "Add member to group",
+            "description": "",
+            "operationId": "GroupMemberView",
+            "consumes": [
+                "application/json",
+                "application/xml"
+            ],
+            "produces": [
+                "application/json",
+                "application/xml"
+            ],
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "primary_key",
+                    "required": true,
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": ""
+                },
+                {
+                    "in": "body",
+                    "name": "member_id",
+                    "required": true,
+                    "type": "int", 
+                    "minimum": 1,
+                    "description": ""
+                }
+            ],
+            "responses": [
+                {
+                    "200": {
+                        "description": "Successfully added member to group <id>"
+                    },
+                    "404": {
+                        "description": "EmptyUserList: No user found in group <id>"
+                    }
+                }
+            ],
+            "security": [
+                {
+                    "token_auth": [
+                        "read: groupmember",
+                        "write: groupmember"
+                    ]
+                }
+            ]
+        },
+        "delete": {
+            "tags": [
+                "group"
+            ],
+            "summary": "Remove a member from group",
+            "description": "",
+            "operationId": "AccountDetailView",
+            "consumes": [
+                "application/json",
+                "application/xml"
+            ],
+            "produces": [
+                "application/json",
+                "application/xml"
+            ],
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "primary_key",
+                    "required": true,
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": ""
+                }
+            ],
+            "responses": [
+                {
+                    "200": {
+                        "description": "Successfully deleted account"
+                    },
+                    "404": {
+                        "description": "EmptyUserList: No user found at <id>"
+                    }
+                }
+            ],
+            "security": [
+                {
+                    "token_auth": [
+                        "read: group",
+                        "write: group"
+                    ]
+                }
+            ]
+        }
+    }
+}

@@ -182,6 +182,27 @@ class GroupTaskView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def put(self, request, primary_key, format=None):
+        """
+        modify task's details
+        """
+        group = Group.objects.get(pk=primary_key)
+        if not group:
+            raise Http404('Group does not exist')
+        
+        group_task_queryset = GroupTask.objects.filter(group_id=group.id)
+        if len(group_task_queryset) == 0:
+            return Http404('Task does not exist in group')
+
+
+        serializer_data = {'group_id': group.id, 'name': request.data['task_name']}
+        serializer = GroupTaskSerializer(data=serializer_data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(data={}, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def delete(self, request, primary_key, format=None):
         """
         delete task in group

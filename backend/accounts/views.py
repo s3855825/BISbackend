@@ -3,6 +3,7 @@ import os
 
 from django.http import Http404
 from posts.models import Post
+from groups.models import GroupMember
 from rest_framework import status
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
@@ -33,7 +34,7 @@ class UserView(APIView):
         users = CustomUser.objects.all()
         serializer = UserSerializer(users, many=True)
         if not serializer.data:
-            return Response({'EmptyUserList': 'No user registered'})
+            return Response({'EmptyUserList': 'No user registered'}, status=status.HTTP_404_NOT_FOUND)
         return Response(serializer.data)
 
     def post(self, request, format=None):
@@ -136,5 +137,21 @@ class UserPostView(APIView):
                 'author_name': post.author.username,
                 'created_time': post.timestamp,
             }
+            response_data.append(data)
+        return Response(data=response_data, status=status.HTTP_200_OK)
+
+
+
+class UserGroupView(APIView):
+    def get(self, request, primary_key, format=None):
+        user_group_queryset = GroupMember.objects.filter(author=primary_key)
+        if len(user_group_queryset) == 0:
+            return Response(data={'': "You don't have any group yet :<"}, status=status.HTTP_200_OK)
+        response_data = []
+        for member_group in user_group_queryset:
+            data = {
+                'id': member_group.group_id.id,
+                'group_name': member_group.group_id.title,
+             }
             response_data.append(data)
         return Response(data=response_data, status=status.HTTP_200_OK)
