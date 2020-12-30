@@ -9,7 +9,6 @@ class CustomUser(models.Model):
 
     username = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
-    # unique_code = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
     score = models.FloatField(default=100.0)
 

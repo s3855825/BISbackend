@@ -34,7 +34,7 @@ class UserView(APIView):
         users = CustomUser.objects.all()
         serializer = UserSerializer(users, many=True)
         if not serializer.data:
-            return Response({'EmptyUserList': 'No user registered'}, status=status.HTTP_404_NOT_FOUND)
+            return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
         return Response(serializer.data)
 
     def post(self, request, format=None):
