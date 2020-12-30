@@ -33,9 +33,8 @@ class UserView(APIView):
         # return the list of all users
         users = CustomUser.objects.all()
         serializer = UserSerializer(users, many=True)
-        if serializer.is_valid(raise_exception=True):
-            if not serializer.data:
-                return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+        if not serializer.data:
+            return Response({"empty user list": "no account created"}, status=status.HTTP_404_NOT_FOUND)
         return Response(serializer.data)
 
     def post(self, request, format=None):
