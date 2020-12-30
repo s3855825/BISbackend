@@ -11,7 +11,7 @@ class CustomUser(models.Model):
     password = models.CharField(max_length=255)
     # unique_code = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
-    point = models.FloatField(default=100.0)
+    score = models.FloatField(default=100.0)
 
 
 class Token(models.Model):
