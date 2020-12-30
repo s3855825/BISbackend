@@ -4,15 +4,13 @@ import os
 from django.http import Http404
 from posts.models import Post
 from groups.models import GroupMember
-from reviews.models import Review
-from reviews.serializers import ReviewSerializer
 from rest_framework import status
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import CustomUser, Token
-from .serializers import LoginSerializer, UserSerializer, AccessTokenSerializer
+from .models import CustomUser, Token, Review
+from .serializers import LoginSerializer, UserSerializer, AccessTokenSerializer, ReviewSerializer
 
 
 def generate_token(user_id):
