@@ -1,7 +1,7 @@
 # from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from .models import CustomUser
+from .models import CustomUser, Review
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -26,3 +26,14 @@ class AccessTokenSerializer(serializers.Serializer):
     username = serializers.CharField()
     email = serializers.CharField()
     token = serializers.CharField()
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ('reviewee', 'review_message', 'review_score',)
+
+    def create(self, validated_data):
+        review = super().create(validated_data)
+        review.save()
+        return review

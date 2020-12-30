@@ -4,6 +4,8 @@ import os
 from django.http import Http404
 from posts.models import Post
 from groups.models import GroupMember
+from reviews.models import Review
+from reviews.serializers import ReviewSerializer
 from rest_framework import status
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
@@ -93,9 +95,6 @@ class UserAuthView(APIView):
             serialized_username = login_serializer.data['username']
             serialized_password = login_serializer.data['password']
 
-            # user = authenticate(username=serialized_username,
-            #                     password=serialized_password)
-
             queryset = CustomUser.objects.filter(username=serialized_username)
             user = None
             if len(queryset) > 0:
@@ -155,3 +154,33 @@ class UserGroupView(APIView):
              }
             response_data.append(data)
         return Response(data=response_data, status=status.HTTP_200_OK)
+
+
+class UserReviewView(APIView):
+    def get(self, request, primary_key, format=None):
+        """
+        Get all reviews given by a user
+        """
+        review_queryset = Review.objects.filter(reviewer=primary_key)
+        if len(review_queryset) == 0:
+            return Response(data={'': "You don't have any review yet"}, status=status.HTTP_200_OK)
+        response_data = []
+        for review in review_queryset:
+            data = {
+                'id': review.id,
+                'reviee': review.reviewee,
+                'message': review.review_message,
+                'score': review.review_score,
+            }
+            response_data.append(data)
+        return Response(data=response_data, status=status.HTTP_200_OK)
+    
+    def post(self, request, format=None):
+        """
+        Create a new review
+        """
+        review_serializer = ReviewSerializer(data=request.data)
+        if review_serializer.is_valid(raise_exception=True):
+            review_serializer.save()
+            return Response(data=review_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(review_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
