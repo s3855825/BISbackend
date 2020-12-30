@@ -27,8 +27,8 @@ class Review(models.Model):
     class Meta:
         db_table = "Review"
 
-    reviewer = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE)
-    reviewee = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE)
+    reviewer = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE, related_name="reviewer")
+    reviewee = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE, related_name="reviewee")
     review_text = models.CharField(max_length=255)
     review_score = models.FloatField(default=0.0)
     review_time = models.DateTimeField(default=timezone.now)
