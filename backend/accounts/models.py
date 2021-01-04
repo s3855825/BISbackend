@@ -1,6 +1,11 @@
 from django.db import models
 from django.utils import timezone
-import uuid
+import random
+import string
+
+
+def fc_generator(chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(6))
 
 
 # Create your models here.
@@ -13,7 +18,7 @@ class CustomUser(models.Model):
     email = models.CharField(max_length=255)
     score = models.FloatField(default=100.0)
     reviewed_times = models.IntegerField(default=0)
-    friend_code = models.CharField(max_length=50, default=uuid.uuid4().hex[:10].upper(), unique=True)
+    friend_code = models.CharField(max_length=50, default=fc_generator, unique=True)
 
 
 class Token(models.Model):
