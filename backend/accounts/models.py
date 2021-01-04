@@ -13,7 +13,6 @@ class CustomUser(models.Model):
     email = models.CharField(max_length=255)
     score = models.FloatField(default=100.0)
     reviewed_times = models.IntegerField(default=0)
-    friend_code = models.CharField(max_length=50, default=get_random_string, unique=True)
 
 
 class Token(models.Model):
