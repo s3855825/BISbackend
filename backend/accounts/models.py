@@ -11,6 +11,7 @@ class CustomUser(models.Model):
     password = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
     score = models.FloatField(default=100.0)
+    reviewed_times = models.IntegerField(default=0)
 
 
 class Token(models.Model):
@@ -18,7 +19,7 @@ class Token(models.Model):
         db_table = "Token"
 
     key = models.CharField(primary_key=True, max_length=255)
-    user = models.ForeignKey(CustomUser, related_name='token', on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, related_name='token', on_delete=models.CASCADE, to_field="id")
     created = models.DateTimeField(default=timezone.now)
 
 
@@ -26,8 +27,8 @@ class Review(models.Model):
     class Meta:
         db_table = "Review"
 
-    reviewer = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE, related_name="reviewer")
-    reviewee = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE, related_name="reviewee")
+    reviewer = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="reviewer", to_field="id")
+    reviewee = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="reviewee", to_field="id")
     review_text = models.CharField(max_length=255)
     review_score = models.FloatField(default=0.0)
     review_time = models.DateTimeField(default=timezone.now)

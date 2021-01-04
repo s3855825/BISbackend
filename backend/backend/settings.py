@@ -88,10 +88,19 @@ HEROKU_SERVER = os.environ.get('HEROKU_SERVER')
 
 if ON_HEROKU:
     DATABASE_URL = 'postgresql://<postgresql>'
+    DATABASES = {'default': dj_database_url.config(default=DATABASE_URL)}
 else:
-    DATABASE_URL = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'groupmaker',
+            'USER': 'duc',
+            'PASSWORD': 'duc@123',
+            'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+            'PORT': '5432',
+        }
+    }
 
-DATABASES = {'default': dj_database_url.config(default=DATABASE_URL)}
 
 
 # Password validation

@@ -91,12 +91,13 @@ class GroupMemberView(APIView):
         if not group:
             raise Http404('Group does not exist')
         member_queryset = GroupMember.objects.filter(group_id=group.id)
+
         response_data = []
         if len(member_queryset) <= 0:
             return Response({'EmptyUserList': 'No account in group yet'}, status=status.HTTP_200_OK)
         else:
             for member in member_queryset:
-                user = CustomUser.objects.get(pk=member.id)
+                user = CustomUser.objects.get(pk=member.member_id.id)
                 data = {
                     'member_id': user.id,
                     'member_name': user.username,
@@ -129,10 +130,11 @@ class GroupMemberView(APIView):
         """
         delete member from group
         """
-        group = Group.objects.filter(pk=primary_key)
+        group = Group.objects.get(pk=primary_key)
         if not group:
             raise Http404('Group does not exist')
         user_id = request.data['user_id']
+
         memberlist_queryset = GroupMember.objects.filter(group_id=group.id, member_id=user_id)
         if memberlist_queryset.count == 0:
             return Http404('No user in group')
@@ -155,7 +157,7 @@ class GroupTaskView(APIView):
             return Response({'EmptyTaskList': 'No task in group yet'}, status=status.HTTP_200_OK)
         else:
             for listed_task in task_queryset:
-                task = Task.objects.get(pk=listed_task.id)
+                task = Task.objects.get(pk=listed_task.id.id)
                 data = {
                     'task_id': task.id,
                     'task_name': task.task_name,
@@ -207,7 +209,7 @@ class GroupTaskView(APIView):
         """
         delete task in group
         """
-        group = Group.objects.filter(pk=primary_key)
+        group = Group.objects.get(pk=primary_key)
         if not group:
             raise Http404('Group does not exist')
         task_id = request.data['task_id']

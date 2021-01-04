@@ -14,17 +14,10 @@ class Post(models.Model):
     title = models.CharField(max_length=255, blank=False, null=False)
     message = models.CharField(max_length=255, blank=True)
     timestamp = models.DateTimeField(default=timezone.now)
-    author = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE)
+    author = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE, to_field="id")
 
     # search_vector = SearchVectorField(null=True)
     objects = PostManager()
 
     def __str__(self):
         return '{}: {}'.format(self.author.username, self.title)
-
-    # def save(self, *args, **kwargs):
-    #     self.search_vector = (
-    #             SearchVector('title', weight='A')
-    #             + SearchVector('message', weight='B')
-    #     )
-    #     super().save(*args, **kwargs)

@@ -58,14 +58,14 @@ class UserDetailView(APIView):
                 serializer = UserSerializer(user)
                 return Response(data=serializer.data, status=status.HTTP_200_OK)
             else:
-                return Response(data={'ErrorMessage': 'No user found'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response(data={'': 'No user found'}, status=status.HTTP_404_NOT_FOUND)
         except CustomUser.DoesNotExist:
             raise Http404
 
     def put(self, request, primary_key, format=None):
         try:
-            user_queryset = CustomUser.objects.get(pk=primary_key)
-            if user_queryset.count > 0:
+            user_queryset = CustomUser.objects.filter(pk=primary_key)
+            if len(user_queryset):
                 user = user_queryset[0]
                 serializer = UserSerializer(user, data=request.data)
                 if serializer.is_valid():
@@ -73,9 +73,9 @@ class UserDetailView(APIView):
                     return Response(data=serializer.data, status=status.HTTP_200_OK)
                 return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             else:
-                return Response(data={'ErrorMessage': 'No user found'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response(data={'ErrorMessage': 'No user found'}, status=status.HTTP_404_NOT_FOUND)
         except CustomUser.DoesNotExist:
-            raise Http404
+            return Response(data={'ErrorMessage': 'No user found'}, status=status.HTTP_404_NOT_FOUND)
 
     def delete(self, request, primary_key, format=None):
         try:
@@ -119,7 +119,12 @@ class UserAuthView(APIView):
 
 
 class UserPostView(APIView):
+    """
+    """
+
     def get(self, request, primary_key, format=None):
+        """
+        """
         # current_user = CustomUser.objects.get(primary_key)
         user_post_queryset = Post.objects.filter(author=primary_key)
         if len(user_post_queryset) == 0:
@@ -138,9 +143,13 @@ class UserPostView(APIView):
         return Response(data=response_data, status=status.HTTP_200_OK)
 
 
-
 class UserGroupView(APIView):
+    """
+    """
+
     def get(self, request, primary_key, format=None):
+        """
+        """
         user_group_queryset = GroupMember.objects.filter(author=primary_key)
         if len(user_group_queryset) == 0:
             return Response(data={'': "You don't have any group yet :<"}, status=status.HTTP_200_OK)
@@ -149,7 +158,7 @@ class UserGroupView(APIView):
             data = {
                 'id': member_group.group_id.id,
                 'group_name': member_group.group_id.title,
-             }
+            }
             response_data.append(data)
         return Response(data=response_data, status=status.HTTP_200_OK)
 
@@ -172,13 +181,31 @@ class UserReviewView(APIView):
             }
             response_data.append(data)
         return Response(data=response_data, status=status.HTTP_200_OK)
-    
+
     def post(self, request, format=None):
         """
-        Create a new review
+        Create a new review and recalculate reviewee's score
         """
         review_serializer = ReviewSerializer(data=request.data)
         if review_serializer.is_valid(raise_exception=True):
             review_serializer.save()
+
+            # recalculate reviewee's score
+            try:
+                reviewee = CustomUser.objects.get(
+                    id=request.data['reviewee_id'])
+
+                current_score = reviewee.score
+                current_count = reviewee.reviewed_times
+                new_score = (current_count * current_score +
+                             review_serializer.data['review_score']) / (current_count + 1)
+                new_count = current_count + 1
+                reviewee.score = new_score
+                reviewee.reviewed_times = new_count
+                reviewee.save()
+
+            except CustomUser.DoesNotExist:
+                return Response(data={"": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
             return Response(data=review_serializer.data, status=status.HTTP_201_CREATED)
         return Response(review_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
