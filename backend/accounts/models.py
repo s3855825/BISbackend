@@ -13,7 +13,7 @@ class CustomUser(models.Model):
     email = models.CharField(max_length=255)
     score = models.FloatField(default=100.0)
     reviewed_times = models.IntegerField(default=0)
-    friend_code = models.CharField(max_length=50, default=uuid.uuid4().hex[:8].upper)
+    friend_code = models.CharField(max_length=50, default=uuid.uuid4().hex[:10].upper(), unique=True)
 
 
 class Token(models.Model):
