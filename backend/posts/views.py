@@ -89,6 +89,7 @@ class PostSearchView(APIView):
                 'title': post.title,
                 'message': post.message,
                 'author_id': post.author.id,
+                'author_name': post.author.username,
             }
             print(data)
             response_data.append(data)
