@@ -15,7 +15,7 @@ class GroupMember(models.Model):
         db_table = "GroupMember"
 
     group_id = models.ForeignKey(Group, on_delete=models.CASCADE, to_field="id")
-    member_id = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE)
+    member_id = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE, to_field="id")
 
 
 class Task(models.Model):

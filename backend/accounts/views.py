@@ -150,14 +150,14 @@ class UserGroupView(APIView):
     def get(self, request, primary_key, format=None):
         """
         """
-        user_group_queryset = GroupMember.objects.filter(author=primary_key)
+        user_group_queryset = GroupMember.objects.filter(member_id=primary_key)
         if len(user_group_queryset) == 0:
             return Response(data={'': "You don't have any group yet :<"}, status=status.HTTP_200_OK)
         response_data = []
         for member_group in user_group_queryset:
             data = {
                 'id': member_group.group_id.id,
-                'group_name': member_group.group_id.title,
+                'group_name': member_group.group_id.group_name,
             }
             response_data.append(data)
         return Response(data=response_data, status=status.HTTP_200_OK)
