@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+import uuid
 
 
 # Create your models here.
@@ -12,6 +13,7 @@ class CustomUser(models.Model):
     email = models.CharField(max_length=255)
     score = models.FloatField(default=100.0)
     reviewed_times = models.IntegerField(default=0)
+    friend_code = models.CharField(max_length=50, default=uuid.uuid4().hex[:8].upper)
 
 
 class Token(models.Model):
