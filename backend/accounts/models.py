@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils import timezone
-from django.utils.crypto import get_random_string
 
 
 # Create your models here.
