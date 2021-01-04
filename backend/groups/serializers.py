@@ -6,7 +6,7 @@ from .models import Group, GroupMember, Task, TaskMember, GroupTask
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
-        fields = ("group_name",)
+        fields = ("id", "group_name",)
 
     def create(self, validated_data):
         group = super().create(validated_data)
