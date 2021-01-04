@@ -196,7 +196,7 @@ class UserReviewView(APIView):
                     id=request.data['reviewee_id'])
 
                 current_score = reviewee.score
-                current_count = reviewee.reviewed_times
+                current_count = reviewee.review_time
                 new_score = (current_count * current_score +
                              review_serializer.data['review_score']) / (current_count + 1)
                 new_count = current_count + 1

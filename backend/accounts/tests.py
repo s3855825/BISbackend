@@ -68,3 +68,6 @@ class ViewAccountTest(APITestCase):
 
     def test_view_all_group_with_user(self):
         pass
+
+    def test_view_all_review_with_user(self):
+        pass
