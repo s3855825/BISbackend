@@ -72,7 +72,7 @@ class PostDetailView(APIView):
 
 
 class PostSearchView(APIView):
-    def get(self, request, format=None):
+    def post(self, request, format=None):
         query_text = request.data['querytext']
         if not query_text:
             return Response({'': "Empty search phrase"}, status=status.HTTP_400_BAD_REQUEST)
