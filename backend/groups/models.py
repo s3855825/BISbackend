@@ -23,7 +23,7 @@ class Task(models.Model):
         db_table = "Task"
 
     task_name = models.CharField(max_length=40)
-    task_description = models.CharField(max_length=255)
+    task_description = models.CharField(max_length=255, blank=True)
     author = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE, to_field="id")
     created_time = models.DateTimeField(default=timezone.now)
     deadline = models.DateTimeField(default=None)
