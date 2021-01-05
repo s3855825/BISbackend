@@ -1,17 +1,23 @@
 from django.db import models
 from django.utils import timezone
+from django.utils.crypto import get_random_string
 
+
+def generate_friend_code():
+    char_list = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    return get_random_string(10, allowed_chars=char_list)
 
 # Create your models here.
 class CustomUser(models.Model):
     class Meta:
-        db_table = "User"
+        db_table = "CustomUser"
 
     username = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
     score = models.FloatField(default=100.0)
     reviewed_times = models.IntegerField(default=0)
+    friendcode = models.CharField(max_length=10, default=generate_friend_code)
 
 
 class Token(models.Model):
