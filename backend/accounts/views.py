@@ -13,8 +13,8 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import CustomUser, Token, Review, Request
-from .serializers import LoginSerializer, UserSerializer, AccessTokenSerializer, ReviewSerializer, RequestSerializer
+from .models import CustomUser, Token, Review
+from .serializers import LoginSerializer, UserSerializer, AccessTokenSerializer, ReviewSerializer
 
 
 def generate_token(user_id):
