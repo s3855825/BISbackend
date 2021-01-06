@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'accounts',
     'posts',
     'groups',
+    'requests',
     'rest_framework',
     'rest_framework.authtoken',
 ]
