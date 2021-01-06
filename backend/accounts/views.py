@@ -5,8 +5,8 @@ from django.http import Http404
 from posts.models import Post
 from groups.models import GroupMember
 from groups.serializers import GroupMemberSerializer
-from requests.models import Request
-from requests.serializers import RequestSerializer
+from join_requests.models import Request
+from join_requests.serializers import RequestSerializer
 
 from rest_framework import status
 from rest_framework.exceptions import AuthenticationFailed
