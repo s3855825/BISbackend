@@ -5,8 +5,7 @@ from django.http import Http404
 from posts.models import Post
 from groups.models import GroupMember
 from groups.serializers import GroupMemberSerializer
-from notifications.models import Notification
-from notifications.serializers import NotificationSerializer
+
 from rest_framework import status
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
