@@ -25,7 +25,7 @@ class Token(models.Model):
         db_table = "Token"
 
     key = models.CharField(primary_key=True, max_length=255)
-    user = models.ForeignKey(CustomUser, related_name='token', on_delete=models.CASCADE, to_field="id")
+    user = models.ForeignKey(CustomUser, related_name='token', on_delete=models.CASCADE)
     created = models.DateTimeField(default=timezone.now)
 
 
@@ -33,8 +33,8 @@ class Review(models.Model):
     class Meta:
         db_table = "Review"
 
-    reviewer = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="reviewer", to_field="id")
-    reviewee = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="reviewee", to_field="id")
+    reviewer = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="reviewer")
+    reviewee = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="reviewee")
     review_text = models.CharField(max_length=255)
     review_score = models.FloatField(default=0.0)
     review_time = models.DateTimeField(default=timezone.now)
@@ -45,8 +45,8 @@ class Request(models.Model):
         db_table = "Request"
 
     title = models.CharField(max_length=255, blank=False, null=False)    
-    sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="sender", to_field="id")
-    receiver = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="receiver", to_field="id")
-    post_id = models.ForeignKey('posts.Post', on_delete=models.CASCADE)
+    sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="sender")
+    receiver = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="receiver")
+    post = models.ForeignKey('posts.Post', on_delete=models.CASCADE)
     message = models.CharField(max_length=255)
     status = models.CharField(max_length=10)

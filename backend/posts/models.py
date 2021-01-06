@@ -14,7 +14,7 @@ class Post(models.Model):
     title = models.CharField(max_length=255, blank=False, null=False)
     message = models.CharField(max_length=255, blank=True)
     timestamp = models.DateTimeField(default=timezone.now)
-    author = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE, to_field="id")
+    author = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE)
     group = models.IntegerField()
 
     # search_vector = SearchVectorField(null=True)
