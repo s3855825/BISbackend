@@ -43,8 +43,10 @@ class Review(models.Model):
 class Request(models.Model):
     class Meta:
         db_table = "Request"
-        
+
+    title = models.CharField(max_length=255, blank=False, null=False)    
     sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="sender", to_field="id")
     receiver = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="receiver", to_field="id")
     post_id = models.ForeignKey('posts.Post', on_delete=models.CASCADE)
     message = models.CharField(max_length=255)
+    status = models.CharField(max_length=10)

@@ -296,8 +296,10 @@ class SenderRequestView(APIView):
             data = {
                 'sender_id': request.sender.id,
                 'receiver_id': request.receiver.id,
+                'receiver_name': request.receiver.username,
                 'post_id': request.post.id,
                 'message': request.message,
+                'status': request.status,
             }
             response_data.append(data)
         return Response(data=response_data, status=status.HTTP_200_OK)
@@ -312,6 +314,7 @@ class SenderRequestView(APIView):
             serializer_data = {
                 'sender': sender.id,
                 'receiver': receiver.id,
+                'title': request.data['title'],
                 'post_id': request.data['post_id'],
                 'message': request.data['message']
             }

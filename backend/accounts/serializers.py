@@ -42,7 +42,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 class RequestSerializer(serializers.Serializer):
     class Meta:
         models = Request
-        fields = ['reviewer', 'reviewee', 'post_id', 'message', ]
+        fields = ['title', 'reviewer', 'reviewee', 'post_id', 'message', 'status', ]
     
     def create(self, validated_data):
         request = super().create(validated_data)
