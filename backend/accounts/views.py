@@ -245,8 +245,10 @@ class ReceiverRequestView(APIView):
         for request in request_queryset:
             data = {
                 'sender_id': request.sender.id,
+                'sender_name': request.sender.username,
                 'receiver_id': request.receiver.id,
                 'post_id': request.post.id,
+                'post_title': request.post.title,
                 'message': request.message,
             }
             response_data.append(data)
