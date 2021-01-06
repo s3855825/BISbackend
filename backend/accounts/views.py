@@ -298,6 +298,7 @@ class SenderRequestView(APIView):
                 'receiver_id': request.receiver.id,
                 'receiver_name': request.receiver.username,
                 'post_id': request.post.id,
+                'post_title': request.post.title,
                 'message': request.message,
                 'status': request.status,
             }
