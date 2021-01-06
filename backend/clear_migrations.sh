@@ -1,5 +1,5 @@
-rm accounts/migrations/0*
-rm posts/migrations/0*
-rm groups/migrations/0*
+rm -rf accounts/migrations/
+rm -rf posts/migrations/
+rm -rf groups/migrations/
 python manage.py makemigrations
 python manage.py migrate
