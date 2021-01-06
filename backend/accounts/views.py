@@ -4,13 +4,16 @@ import os
 from django.http import Http404
 from posts.models import Post
 from groups.models import GroupMember
+from groups.serializers import GroupMemberSerializer
+from notifications.models import Notification
+from notifications.serializers import NotificationSerializer
 from rest_framework import status
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import CustomUser, Token, Review
-from .serializers import LoginSerializer, UserSerializer, AccessTokenSerializer, ReviewSerializer
+from .models import CustomUser, Token, Review, Request
+from .serializers import LoginSerializer, UserSerializer, AccessTokenSerializer, ReviewSerializer, RequestSerializer
 
 
 def generate_token(user_id):
@@ -119,9 +122,27 @@ class UserAuthView(APIView):
 
 
 class UserPostView(APIView):
-    """
-    """
+    def get(self, request, primary_key, format=None):
+        # current_user = CustomUser.objects.get(primary_key)
+        user_post_queryset = Post.objects.filter(author=primary_key)
+        if len(user_post_queryset) == 0:
+            return Response(data={'': "You don't have any post yet :<"}, status=status.HTTP_200_OK)
+        response_data = []
+        for post in user_post_queryset:
+            data = {
+                'id': post.id,
+                'title': post.title,
+                'message': post.message,
+                'author_id': post.author.id,
+                'author_name': post.author.username,
+                'created_time': post.timestamp,
+            }
+            response_data.append(data)
+        return Response(data=response_data, status=status.HTTP_200_OK)
 
+
+
+class UserNotificationView(APIView):
     def get(self, request, primary_key, format=None):
         """
         """
@@ -209,3 +230,92 @@ class UserReviewView(APIView):
 
             return Response(data=review_serializer.data, status=status.HTTP_201_CREATED)
         return Response(review_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ReceiverRequestView(APIView):
+    def get(self, request, primary_key, format=None):
+        """
+        Retrieve all requests received
+        """
+        request_queryset = Request.objects.filter(receiver=primary_key)
+
+        if len(request_queryset) == 0:
+            return Response(data={'': 'No request made', }, status=status.HTTP_404_NOT_FOUND)
+
+        response_data = []
+        for request in request_queryset:
+            data = {
+                'sender_id': request.sender.id,
+                'receiver_id': request.receiver.id,
+                'post_id': request.post.id,
+                'message': request.message,
+            }
+            response_data.append(data)
+
+        return Response(data=response_data, status=status.HTTP_200_OK)
+
+    def post(self, request, primary_key, format=None):
+        """
+        Response to a request
+        """
+        request = Request.objects.get(id=primary_key)
+        post_queryset = Post.objects.get(id=request.data['post'])
+        
+        if len(post_queryset) == 0:
+            return Response({'': 'no post found'}, status=status.HTTP_404_NOT_FOUND)
+        post = post_queryset[0]
+
+        if request.data['response'] == 'accept':
+            # accept request and add sender to group
+            serializer_data = {
+                "group_id": post.group.id,
+                "member_id": request.data['sender_id'],
+            }
+            group_mem_serializer = GroupMemberSerializer(data=serializer_data)
+            if group_mem_serializer.is_valid(raise_exception=True):
+                group_mem_serializer.save()
+        # else:
+            # send notification to sender
+            # TODO
+
+
+
+class SenderRequestView(APIView):
+    def get(self, request, primary_key, format=None):
+        """
+        Retrieve all requests received
+        """
+        request_queryset = Request.objects.filter(receiver=primary_key)
+
+        if len(request_queryset) == 0:
+            return Response(data={'': 'No request made', }, status=status.HTTP_404_NOT_FOUND)
+
+        response_data = []
+        for request in request_queryset:
+            data = {
+                'sender_id': request.sender.id,
+                'receiver_id': request.receiver.id,
+                'post_id': request.post.id,
+                'message': request.message,
+            }
+            response_data.append(data)
+        return Response(data=response_data, status=status.HTTP_200_OK)
+
+    def post(self, request, primary_key, format=None):
+        """
+        Send a request
+        """
+        try:
+            sender = CustomUser.objects.get(id=primary_key)
+            receiver = CustomUser.objects.get(id=request.data['receiver_id'])
+            serializer_data = {
+                'sender': sender.id,
+                'receiver': receiver.id,
+                'post_id': request.data['post_id'],
+                'message': request.data['message']
+            }
+            request_serializer = RequestSerializer(data=serializer_data)
+            if request_serializer.is_valid(raise_exception=True):
+                request_serializer.save()
+        except CustomUser.DoesNotExist:
+            return Response({'': 'Receiver does not exist'}, status=status.HTTP_400_BAD_REQUEST)

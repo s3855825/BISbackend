@@ -38,3 +38,13 @@ class Review(models.Model):
     review_text = models.CharField(max_length=255)
     review_score = models.FloatField(default=0.0)
     review_time = models.DateTimeField(default=timezone.now)
+
+
+class Request(models.Model):
+    class Meta:
+        db_table = "Request"
+        
+    sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="sender", to_field="id")
+    receiver = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="receiver", to_field="id")
+    post_id = models.ForeignKey('posts.Post', on_delete=models.CASCADE)
+    message = models.CharField(max_length=255)

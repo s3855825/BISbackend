@@ -1,7 +1,7 @@
 # from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from .models import CustomUser, Review
+from .models import CustomUser, Review, Request
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -37,3 +37,14 @@ class ReviewSerializer(serializers.ModelSerializer):
         review = super().create(validated_data)
         review.save()
         return review
+
+
+class RequestSerializer(serializers.Serializer):
+    class Meta:
+        models = Request
+        fields = ['reviewer', 'reviewee', 'post_id', 'message', ]
+    
+    def create(self, validated_data):
+        request = super().create(validated_data)
+        request.save()
+        return request
