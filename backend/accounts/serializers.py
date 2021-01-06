@@ -37,14 +37,3 @@ class ReviewSerializer(serializers.ModelSerializer):
         review = super().create(validated_data)
         review.save()
         return review
-
-
-class RequestSerializer(serializers.Serializer):
-    class Meta:
-        models = Request
-        fields = ['title', 'reviewer', 'reviewee', 'post_id', 'message', 'status', ]
-    
-    def create(self, validated_data):
-        request = super().create(validated_data)
-        request.save()
-        return request

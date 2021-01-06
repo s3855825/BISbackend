@@ -5,6 +5,8 @@ from django.http import Http404
 from posts.models import Post
 from groups.models import GroupMember
 from groups.serializers import GroupMemberSerializer
+from request.models import Request
+from requets.serializers import RequestSerializer
 
 from rest_framework import status
 from rest_framework.exceptions import AuthenticationFailed
@@ -231,7 +233,7 @@ class UserReviewView(APIView):
         return Response(review_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ReceiverRequestView(APIView):
+class InboxView(APIView):
     def get(self, request, primary_key, format=None):
         """
         Retrieve all requests received
@@ -281,7 +283,7 @@ class ReceiverRequestView(APIView):
 
 
 
-class SenderRequestView(APIView):
+class OutboxView(APIView):
     def get(self, request, primary_key, format=None):
         """
         Retrieve all requests received
