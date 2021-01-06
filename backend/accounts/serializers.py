@@ -1,7 +1,7 @@
 # from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from .models import CustomUser, Review, Request
+from .models import CustomUser, Review
 
 
 class UserSerializer(serializers.ModelSerializer):
