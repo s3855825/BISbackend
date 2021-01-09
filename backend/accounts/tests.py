@@ -21,11 +21,11 @@ class CreateAccountTest(APITestCase):
         response = self.client.post(self.endpoint, data=payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    def test_create_duplicate_username(self):
-        pass
-
-    def test_create_duplicate_email(self):
-        pass
+    def test_create_duplicate_username_or_email(self):
+        payload = self.account_data_1
+        response_1 = self.clinet.post(self.endpoint, data=payload)
+        response_2 = self.clinet.post(self.endpoint, data=payload)
+        self.assertEqual(response_2.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
 class ViewAccountTest(APITestCase):
@@ -55,7 +55,7 @@ class ViewAccountTest(APITestCase):
         self.assertEqual(len(response.data), 2)
     
     def test_show_user_details(self):
-        pass
+        payloard = {}
 
     def test_modify_user_details(self):
         pass

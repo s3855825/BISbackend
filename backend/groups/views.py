@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Group, Task, GroupMember, GroupTask
-from .serializers import GroupSerializer, GroupMemberSerializer, GroupTaskSerializer
+from .serializers import GroupSerializer, GroupMemberSerializer, GroupTaskSerializer, TaskSerializer
 
 
 class HTTP401(AuthenticationFailed):
@@ -176,13 +176,22 @@ class GroupTaskView(APIView):
         if not group:
             raise Http404('Group does not exist')
 
-        serializer_data = {'group_id': group.id, 'name': request.data['task_name']}
-        serializer = GroupTaskSerializer(data=serializer_data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
+        task_data = {
+            'task_name': request.data['task_name'],
+            'task_description': request.data['task_description'],
+            'author': request.data['author']
+        }
+        task_serializer = TaskSerializer(data=task_data)
+        if task_serializer.is_valid(raise_exception=True):
+            task = task_serializer.save()
+
+        gt_serializer_data = {'group_id': group.id, 'task_id': task.id}
+        gt_serializer = GroupTaskSerializer(data=gt_serializer_data)
+        if gt_serializer.is_valid(raise_exception=True):
+            gt_serializer.save()
             return Response(data={}, status=status.HTTP_200_OK)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(gt_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, primary_key, format=None):
         """
