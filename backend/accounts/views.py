@@ -241,7 +241,7 @@ class InboxView(APIView):
         request_queryset = Request.objects.filter(receiver=primary_key)
 
         if len(request_queryset) == 0:
-            return Response(data={'': 'Your inbox is empty', }, status=status.HTTP_404_NOT_FOUND)
+            return Response(data={'': 'Your inbox is empty', }, status=status.HTTP_200_OK)
 
         response_data = []
         for request in request_queryset:
@@ -291,7 +291,7 @@ class OutboxView(APIView):
         request_queryset = Request.objects.filter(receiver=primary_key)
 
         if len(request_queryset) == 0:
-            return Response(data={'': 'Your outbox is empty!', }, status=status.HTTP_404_NOT_FOUND)
+            return Response(data={'': 'Your outbox is empty!', }, status=status.HTTP_200_OK)
 
         response_data = []
         for request in request_queryset:
