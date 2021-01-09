@@ -26,7 +26,7 @@ class Task(models.Model):
     task_description = models.CharField(max_length=255, blank=True)
     author = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE)
     created_time = models.DateTimeField(default=timezone.now)
-    deadline = models.DateTimeField(default=None)
+    deadline = models.DateTimeField(default=None, null=True)
 
 
 class GroupTask(models.Model):
