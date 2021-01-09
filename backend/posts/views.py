@@ -27,7 +27,7 @@ class PostView(APIView):
                 'message': post.message,
                 'author_id': post.author.id,
                 'author_name': post.author.username,
-                'group_id': post.group_id,
+                'group_id': post.group,
             }
             response_data.append(data)
         return Response(data=response_data)
