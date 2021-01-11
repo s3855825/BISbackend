@@ -271,11 +271,11 @@ class ReplyRequestView(APIView):
             return Response({'': 'no post found'}, status=status.HTTP_404_NOT_FOUND)
         post = post_queryset[0]
 
-        if request.data['response'] == 'accept':
+        if request.data['response'] == 'approve':
             # accept request and add sender to group
             serializer_data = {
                 "group_id": post.group.id,
-                "member_id": request.data['sender_id'],
+                "member_id": request.data['sender'],
             }
             group_mem_serializer = GroupMemberSerializer(data=serializer_data)
             if group_mem_serializer.is_valid(raise_exception=True):
@@ -299,8 +299,8 @@ class OutboxView(APIView):
         response_data = []
         for request in request_queryset:
             data = {
-                'sender_id': request.sender.id,
-                'receiver_id': request.receiver.id,
+                'sender': request.sender.id,
+                'receiver': request.receiver.id,
                 'receiver_name': request.receiver.username,
                 'post_id': request.post.id,
                 'post_title': request.post.title,
@@ -318,12 +318,12 @@ class SendRequestView(APIView):
         """
         try:
             sender = CustomUser.objects.get(id=primary_key)
-            receiver = CustomUser.objects.get(id=request.data['receiver_id'])
+            receiver = CustomUser.objects.get(id=request.data['receiver'])
             serializer_data = {
                 'sender': sender.id,
                 'receiver': receiver.id,
                 'title': request.data['title'],
-                'post_id': request.data['post_id'],
+                'post': request.data['post'],
                 'message': request.data['message'],
                 'status': request.data['status']
             }
