@@ -257,6 +257,9 @@ class InboxView(APIView):
 
         return Response(data=response_data, status=status.HTTP_200_OK)
 
+
+
+class ReplyRequestView(APIView):
     def post(self, request, primary_key, format=None):
         """
         Response to a request
@@ -307,6 +310,8 @@ class OutboxView(APIView):
             response_data.append(data)
         return Response(data=response_data, status=status.HTTP_200_OK)
 
+
+class ReplyRequestView(APIView):
     def post(self, request, primary_key, format=None):
         """
         Send a request

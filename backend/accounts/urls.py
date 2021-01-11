@@ -10,5 +10,7 @@ urlpatterns = [
     path('<int:primary_key>/groups/', views.UserGroupView.as_view(), name='users_group'),
     path('<int:primary_key>/reviews/', views.UserReviewView.as_view(), name='users_review'),
     path('<int:primary_key>/outbox/', views.OutboxView.as_view(), name='users_sent_requests'),
+    path('<int:primary_key>/send/', views.SendRequestView.as_view(), name='users_requests'),
     path('<int:primary_key>/inbox/', views.InboxView.as_view(), name='users_received_requests'),
+    path('<int:primary_key>/reply/', views.ReplyRequestView.as_view(), name='users_reply'),
 ]
