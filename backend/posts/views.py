@@ -43,7 +43,7 @@ class PostView(APIView):
 class PostDetailView(APIView):
     def get(self, request, primary_key, format=None):
         try:
-            post_queryset = Post.objects.get(pk=primary_key)
+            post_queryset = Post.objects.filter(pk=primary_key)
             serializer = PostSerializer(post_queryset[0])
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         except Post.DoesNotExist:
