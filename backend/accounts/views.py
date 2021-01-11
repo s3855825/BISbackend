@@ -246,6 +246,7 @@ class InboxView(APIView):
         response_data = []
         for request in request_queryset:
             data = {
+                'id': requets.id,
                 'sender_id': request.sender.id,
                 'sender_name': request.sender.username,
                 'receiver_id': request.receiver.id,
@@ -300,6 +301,7 @@ class OutboxView(APIView):
         response_data = []
         for request in request_queryset:
             data = {
+                'id': request.id,
                 'sender': request.sender.id,
                 'receiver': request.receiver.id,
                 'receiver_name': request.receiver.username,
