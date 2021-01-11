@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from .models import Request
 
-class RequestSerializer(serializers.Serializer):
+class RequestSerializer(serializers.ModelSerializer):
     class Meta:
         models = Request
         fields = ['title', 'reviewer', 'reviewee', 'post_id', 'message', 'status', ]
