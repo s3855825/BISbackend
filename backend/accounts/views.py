@@ -267,20 +267,26 @@ class ReplyRequestView(APIView):
         """
         Response to a request
         """
-        join_request = Request.objects.get(id=request.data['request_id'])
+        try:
+            join_request = Request.objects.get(id=request.data['request_id'])
 
-        if request.data['response'] == 'approve':
-            # accept request and add sender to group
-            serializer_data = {
-                "group_id": join_request.post.group,
-                "member_id": request.data['sender'],
-            }
-            group_mem_serializer = GroupMemberSerializer(data=serializer_data)
-            if group_mem_serializer.is_valid(raise_exception=True):
-                group_mem_serializer.save()
+            if request.data['response'] == 'approve':
+                # accept request and add sender to group
+                serializer_data = {
+                    "group_id": join_request.post.group,
+                    "member_id": request.data['sender'],
+                }
+                group_mem_serializer = GroupMemberSerializer(data=serializer_data)
+                if group_mem_serializer.is_valid(raise_exception=True):
+                    group_mem_serializer.save()
+                    join_request.status = "approved"
+                    join_request.save()
+                    return Response(data=group_mem_serializer.data, status=status.HTTP_200_OK)
+            elif request.data['response'] == 'decline':
+                join_request.status='declined'
+                join_request.save()
                 return Response(data=group_mem_serializer.data, status=status.HTTP_200_OK)
-        else:
-            request.delete()
+        except Request.DoesNotExist:
             return Response(data={'': 'Request declined'}, status=status.HTTP_200_OK)
 
 
@@ -311,6 +317,17 @@ class OutboxView(APIView):
             }
             response_data.append(data)
         return Response(data=response_data, status=status.HTTP_200_OK)
+
+    def delete(self, request, primary_key, format=None):
+        """
+        Delete a request by sent currently logged in user
+        """
+        try:
+            join_request = Request.objects.get(id=request.data['request_id'])
+            join_request.delete()
+            return Response(data={'': 'Request deleted'}, status=status.HTTP_200_OK)
+        except Request.DoesNotExist:
+            return Response(data={'': 'request does not exist'}, status=status.HTTP_404_NOT_FOUND)
 
 
 class SendRequestView(APIView):
