@@ -292,7 +292,7 @@ class OutboxView(APIView):
         """
         Retrieve all requests received
         """
-        request_queryset = Request.objects.filter(receiver=primary_key)
+        request_queryset = Request.objects.filter(sender=primary_key)
 
         if len(request_queryset) == 0:
             return Response(data={'': 'Your outbox is empty!', }, status=status.HTTP_200_OK)
