@@ -311,7 +311,7 @@ class OutboxView(APIView):
         return Response(data=response_data, status=status.HTTP_200_OK)
 
 
-class ReplyRequestView(APIView):
+class SendRequestView(APIView):
     def post(self, request, primary_key, format=None):
         """
         Send a request
