@@ -268,11 +268,11 @@ class ReplyRequestView(APIView):
         Response to a request
         """
         join_request = Request.objects.get(id=request.data['request_id'])
-        post_queryset = Post.objects.get(id=request.data['post'])
+        # post_queryset = Post.objects.get(id=request.data['post'])
         
-        if len(post_queryset) == 0:
-            return Response({'': 'no post found'}, status=status.HTTP_404_NOT_FOUND)
-        post = post_queryset[0]
+        # if len(post_queryset) == 0:
+        #     return Response({'': 'no post found'}, status=status.HTTP_404_NOT_FOUND)
+        # post = post_queryset[0]
 
         if join_request.data['response'] == 'approve':
             # accept request and add sender to group
