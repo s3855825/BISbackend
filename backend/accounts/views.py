@@ -253,6 +253,7 @@ class InboxView(APIView):
                 'receiver_id': request.receiver.id,
                 'post_id': request.post.id,
                 'post_title': request.post.title,
+                'group_id': request.post.group,
                 'message': request.message,
             }
             response_data.append(data)
@@ -283,9 +284,9 @@ class ReplyRequestView(APIView):
             if group_mem_serializer.is_valid(raise_exception=True):
                 group_mem_serializer.save()
                 return Response(data=group_mem_serializer.data, status=status.HTTP_200_OK)
-        # else:
-            # send notification to sender
-            # TODO
+        else:
+            request.delete()
+            return Response(data={'': 'Request declined'}, status=status.HTTP_200_OK)
 
 
 
@@ -309,6 +310,7 @@ class OutboxView(APIView):
                 'receiver_name': request.receiver.username,
                 'post_id': request.post.id,
                 'post_title': request.post.title,
+                'group_id': request.post.group,
                 'message': request.message,
                 'status': request.status,
             }
