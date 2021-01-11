@@ -4,7 +4,7 @@ from .models import Request
 
 class RequestSerializer(serializers.ModelSerializer):
     class Meta:
-        models = Request
+        model = Request
         fields = ['title', 'reviewer', 'reviewee', 'post_id', 'message', 'status', ]
     
     def create(self, validated_data):
