@@ -280,6 +280,7 @@ class ReplyRequestView(APIView):
             group_mem_serializer = GroupMemberSerializer(data=serializer_data)
             if group_mem_serializer.is_valid(raise_exception=True):
                 group_mem_serializer.save()
+                return Response(data=group_mem_serializer.data, status=status.HTTP_200_OK)
         # else:
             # send notification to sender
             # TODO
