@@ -263,7 +263,7 @@ class InboxView(APIView):
 
 
 class ReplyRequestView(APIView):
-    def post(self, request, format=None):
+    def post(self, request, primary_key, format=None):
         """
         Response to a request
         """
