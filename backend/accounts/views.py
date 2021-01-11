@@ -263,11 +263,11 @@ class InboxView(APIView):
 
 
 class ReplyRequestView(APIView):
-    def post(self, request, primary_key, format=None):
+    def post(self, request, format=None):
         """
         Response to a request
         """
-        request = Request.objects.get(id=primary_key)
+        request = Request.objects.get(id=request.data['request_id'])
         post_queryset = Post.objects.get(id=request.data['post'])
         
         if len(post_queryset) == 0:
