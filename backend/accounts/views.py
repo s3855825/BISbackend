@@ -272,7 +272,7 @@ class ReplyRequestView(APIView):
         if request.data['response'] == 'approve':
             # accept request and add sender to group
             serializer_data = {
-                "group_id": join_request.post.group.id,
+                "group_id": join_request.post.group,
                 "member_id": request.data['sender'],
             }
             group_mem_serializer = GroupMemberSerializer(data=serializer_data)
