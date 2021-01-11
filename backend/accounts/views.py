@@ -324,7 +324,8 @@ class ReplyRequestView(APIView):
                 'receiver': receiver.id,
                 'title': request.data['title'],
                 'post_id': request.data['post_id'],
-                'message': request.data['message']
+                'message': request.data['message'],
+                'status': request.data['status']
             }
             request_serializer = RequestSerializer(data=serializer_data)
             if request_serializer.is_valid(raise_exception=True):
