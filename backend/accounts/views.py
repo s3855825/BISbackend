@@ -330,5 +330,6 @@ class SendRequestView(APIView):
             request_serializer = RequestSerializer(data=serializer_data)
             if request_serializer.is_valid(raise_exception=True):
                 request_serializer.save()
+                return Response(data=request_serializer.data, status=status.HTTP_200_OK)
         except CustomUser.DoesNotExist:
             return Response({'': 'Receiver does not exist'}, status=status.HTTP_400_BAD_REQUEST)
