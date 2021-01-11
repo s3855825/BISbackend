@@ -274,11 +274,11 @@ class ReplyRequestView(APIView):
         #     return Response({'': 'no post found'}, status=status.HTTP_404_NOT_FOUND)
         # post = post_queryset[0]
 
-        if join_request.data['response'] == 'approve':
+        if request.data['response'] == 'approve':
             # accept request and add sender to group
             serializer_data = {
                 "group_id": post.group.id,
-                "member_id": join_request.data['sender'],
+                "member_id": request.data['sender'],
             }
             group_mem_serializer = GroupMemberSerializer(data=serializer_data)
             if group_mem_serializer.is_valid(raise_exception=True):
