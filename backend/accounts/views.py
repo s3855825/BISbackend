@@ -114,6 +114,7 @@ class UserAuthView(APIView):
                 'username': user.username,
                 'email': user.email,
                 'token': token.key,
+                'friendcode': user.friendcode
             }
             token_serializer = AccessTokenSerializer(data=data)
             if token_serializer.is_valid():
